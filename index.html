@@ -440,8 +440,23 @@ footer{background:var(--black-deep);padding:120px 5vw 48px;border-top:1px solid 
 
 /* === RESPONSIVE === */
 @media (max-width:1024px){
-  .nav__links{display:none}
+  .nav__links{
+    display:none;
+    position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;align-items:flex-start;gap:0;
+    background:rgba(10,10,10,0.96);
+    backdrop-filter:blur(24px) saturate(140%);
+    -webkit-backdrop-filter:blur(24px) saturate(140%);
+    border-top:1px solid var(--glass-border);
+    border-bottom:1px solid var(--glass-border);
+    padding:24px 5vw 32px;
+  }
+  .nav.menu-open .nav__links{display:flex}
+  .nav__links .nav__link{padding:14px 0;font-size:13px;width:100%;border-bottom:1px solid rgba(255,255,255,0.06)}
   .nav__hamburger{display:flex}
+  .nav.menu-open .nav__hamburger span:nth-child(1){transform:translateY(11px) rotate(45deg)}
+  .nav.menu-open .nav__hamburger span:nth-child(2){opacity:0}
+  .nav.menu-open .nav__hamburger span:nth-child(3){transform:translateY(-11px) rotate(-45deg)}
   .worlds__row{grid-template-columns:repeat(2,1fr)}
   .vize__grid,.mag__row,.support__grid,.benefits__grid,.timeline__steps,.map-wrap{grid-template-columns:1fr}
   .timeline__line{display:none}
@@ -459,7 +474,15 @@ footer{background:var(--black-deep);padding:120px 5vw 48px;border-top:1px solid 
   .worlds__row{grid-template-columns:1fr}
   .footer__cols{grid-template-columns:1fr}
   .logos__grid{grid-template-columns:repeat(2,1fr);gap:24px}
-  .nav{padding:18px 5vw}
+  .nav{padding:14px 5vw;gap:8px}
+  .nav__logo{flex-shrink:0;min-width:0}
+  .nav__logo-mark{height:38px}
+  .nav.scrolled .nav__logo-mark{height:34px}
+  .nav__right{gap:10px}
+  .lang{display:none}
+  .nav__cta{display:none}
+  .nav__shop{padding:8px 12px;font-size:10px;letter-spacing:0.16em}
+  .nav__hamburger{width:26px;height:20px}
   .section-pad,.section-pad-lg{padding:100px 5vw}
 }
 
@@ -1146,6 +1169,18 @@ footer{background:var(--black-deep);padding:120px 5vw 48px;border-top:1px solid 
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', ()=>{
   if(window.scrollY > 80) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+});
+
+// ============ MOBILE HAMBURGER ============
+const hamburger = document.querySelector('.nav__hamburger');
+if(hamburger){
+  hamburger.addEventListener('click', ()=>{
+    nav.classList.toggle('menu-open');
+  });
+}
+// Close mobile menu when any nav link is clicked
+document.querySelectorAll('.nav__links .nav__link, .nav__cta, .nav__shop').forEach(l=>{
+  l.addEventListener('click', ()=> nav.classList.remove('menu-open'));
 });
 
 // ============ ROUTING ============
