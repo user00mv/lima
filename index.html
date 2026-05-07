@@ -1,0 +1,1301 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LiMa Vision — Philip Martin's distributor pro ČR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Montserrat:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --black:#0A0A0A; --black-deep:#050505; --charcoal:#141414; --charcoal-2:#1C1C1C; --line:#2A2A2A;
+  --white:#FAFAFA; --white-soft:#E8E8E8; --gray-300:#B8B8B8; --gray-500:#6B6B6B;
+  --gold:#D4AF37; --gold-deep:#A8862A; --gold-light:#F5DDA8;
+  --shimmer: linear-gradient(135deg,#B8862A 0%,#D4AF37 25%,#F5DDA8 50%,#D4AF37 75%,#A8862A 100%);
+  --glass: rgba(255,255,255,0.03);
+  --glass-border: rgba(212,175,55,0.18);
+  --font-display:'Big Shoulders Display','Impact',sans-serif;
+  --font-body:'Montserrat',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--black);color:var(--white-soft);
+  font-family:var(--font-body);font-weight:400;font-size:16px;line-height:1.7;letter-spacing:0.01em;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;background:none;border:none;color:inherit;cursor:pointer}
+
+.eyebrow{font-family:var(--font-body);font-weight:500;font-size:12px;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold)}
+.eyebrow-num{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0.18em;color:var(--gold)}
+h1,h2,h3{font-family:var(--font-display);text-transform:uppercase;color:var(--white);letter-spacing:-0.01em;line-height:0.95}
+h1{font-size:clamp(64px,11vw,180px);font-weight:900;line-height:0.92}
+h2{font-size:clamp(48px,7vw,120px);font-weight:800}
+h3{font-size:clamp(28px,4vw,56px);font-weight:700;line-height:1.05}
+p{font-size:16px;line-height:1.7;color:var(--white-soft)}
+.body-lg{font-size:18px;line-height:1.65}
+.caption{font-size:12px;text-transform:uppercase;letter-spacing:0.18em;font-weight:500}
+
+.shimmer-text{
+  background:var(--shimmer);background-size:200% 200%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shimmer 4s ease-in-out infinite;
+}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+/* === BUTTONS === */
+.btn{
+  display:inline-flex;align-items:center;gap:14px;
+  font-family:var(--font-display);font-weight:800;font-size:14px;letter-spacing:0.18em;text-transform:uppercase;
+  padding:18px 32px;border:1px solid var(--gold);position:relative;overflow:hidden;
+  transition:transform .3s ease, box-shadow .3s ease;
+  background:transparent;color:var(--gold);cursor:pointer;
+}
+.btn::before{content:"";position:absolute;inset:0;background:var(--gold);transform:translateX(-101%);transition:transform .5s cubic-bezier(.22,1,.36,1);z-index:-1}
+.btn:hover{color:var(--black);transform:translateY(-1px);box-shadow:0 12px 40px rgba(212,175,55,0.18)}
+.btn:hover::before{transform:translateX(0)}
+.btn--filled{background:var(--gold);color:var(--black)}
+.btn--filled::before{background:var(--gold-light)}
+.btn--filled:hover{color:var(--black)}
+.btn .arrow{transition:transform .3s ease}
+.btn:hover .arrow{transform:translateX(4px)}
+
+.link-gold{
+  font-family:var(--font-body);font-weight:500;font-size:12px;letter-spacing:0.24em;text-transform:uppercase;
+  color:var(--gold);position:relative;display:inline-flex;align-items:center;gap:10px;padding-bottom:4px;
+}
+.link-gold::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--gold);transition:width .4s cubic-bezier(.22,1,.36,1)}
+.link-gold:hover::after{width:100%}
+.link-gold:hover .arrow{transform:translateX(4px)}
+.link-gold .arrow{transition:transform .3s ease}
+
+/* === NAV === */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 5vw;transition:all .4s ease;
+}
+.nav.scrolled{background:rgba(10,10,10,0.72);backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);border-bottom:1px solid var(--glass-border);padding:18px 5vw}
+.nav__logo{display:flex;align-items:center;gap:14px;color:var(--white);text-transform:uppercase}
+.nav__logo-mark{height:64px;width:auto;display:block;filter:drop-shadow(0 2px 12px rgba(0,0,0,0.5))}
+.nav.scrolled .nav__logo-mark{height:52px;transition:height .3s ease}
+.nav__links{display:flex;gap:36px;align-items:center}
+.nav__link{font-size:11px;font-weight:500;letter-spacing:0.24em;text-transform:uppercase;color:var(--white-soft);position:relative;padding:6px 0;cursor:pointer;transition:color .3s ease}
+.nav__link:hover{color:var(--gold)}
+.nav__link.active{color:var(--gold)}
+.nav__link.active::after{content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:0;height:1px;width:60%;background:var(--gold)}
+.nav__right{display:flex;gap:24px;align-items:center}
+.lang{display:flex;gap:8px;font-size:11px;font-weight:500;letter-spacing:0.18em;color:var(--gray-300)}
+.lang button{padding:4px 2px;color:var(--gray-300);font-size:11px;letter-spacing:0.18em;font-weight:500;position:relative}
+.lang button.active{color:var(--gold)}
+.lang button.active::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--gold)}
+.lang span{color:var(--line)}
+.nav__ext{font-size:9px;color:var(--gold);margin-left:4px;letter-spacing:0}
+.nav__shop{font-family:var(--font-display);font-weight:800;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--white);background:var(--gold);padding:12px 18px;display:inline-flex;align-items:center;gap:8px;color:var(--black);transition:all .3s ease;position:relative;overflow:hidden}
+.nav__shop::before{content:"";position:absolute;inset:0;background:var(--gold-light);transform:translateX(-101%);transition:transform .5s cubic-bezier(.22,1,.36,1);z-index:-1}
+.nav__shop:hover{box-shadow:0 8px 24px rgba(212,175,55,0.3);transform:translateY(-1px)}
+.nav__shop:hover::before{transform:translateX(0)}
+.nav__shop .arrow{font-size:13px;font-weight:600}
+.nav__cta{
+  font-family:var(--font-display);font-weight:800;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;
+  border:1px solid var(--gold);color:var(--gold);padding:12px 20px;position:relative;overflow:hidden;cursor:pointer;
+  transition:color .3s ease;
+}
+.nav__cta::before{content:"";position:absolute;inset:0;background:var(--gold);transform:translateX(-101%);transition:transform .5s cubic-bezier(.22,1,.36,1);z-index:-1}
+.nav__cta:hover{color:var(--black)}
+.nav__cta:hover::before{transform:translateX(0)}
+.nav__hamburger{display:none;width:32px;height:24px;flex-direction:column;justify-content:space-between;cursor:pointer}
+.nav__hamburger span{display:block;height:1px;background:var(--white);transition:all .3s}
+
+/* === PAGES === */
+.page{display:none}
+.page.active{display:block;animation:fadeIn .6s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* === HERO === */
+.hero{position:relative;height:calc(100vh - 180px);min-height:680px;max-height:920px;margin-top:180px;overflow:hidden;display:flex;align-items:center;padding-bottom:80px}
+.hero__bg{position:absolute;inset:0;overflow:hidden;background:var(--black-deep)}
+.hero__bg img{width:100%;height:100%;object-fit:cover;filter:brightness(0.55) saturate(1.1);transform:scale(1.04);animation:heroIn 1800ms cubic-bezier(.22,1,.36,1) forwards}
+@keyframes heroIn{to{transform:scale(1.0)}}
+.hero__overlay{position:absolute;inset:0;background:rgba(10,10,10,0.35)}
+.hero__overlay::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, transparent 75%, var(--black) 100%)}
+.hero__content{position:relative;z-index:2;padding:0 8vw;max-width:1400px}
+.hero__eyebrow{margin-bottom:32px}
+.hero h1{margin-bottom:32px}
+.hero__sub{max-width:540px;margin-bottom:48px;font-size:18px;line-height:1.65;color:var(--white-soft)}
+.hero__ctas{display:flex;gap:36px;align-items:center;flex-wrap:wrap}
+.scroll-ind{position:absolute;bottom:24px;right:48px;left:auto;transform:none;z-index:3;display:flex;flex-direction:column;align-items:center;gap:14px}
+.scroll-ind__line{width:1px;height:48px;background:linear-gradient(180deg,transparent,var(--gold));overflow:hidden;position:relative}
+.scroll-ind__line::after{content:"";position:absolute;top:-30px;left:0;width:100%;height:30px;background:var(--gold);animation:scrollDot 2.4s ease-in-out infinite}
+@keyframes scrollDot{0%{top:-30px}100%{top:48px}}
+.scroll-ind__label{font-size:10px;letter-spacing:0.32em;color:var(--gold);font-weight:500}
+
+.hero-anim{opacity:0;transform:translateY(20px);animation:heroFade 800ms cubic-bezier(.22,1,.36,1) forwards}
+.hero-anim.d1{animation-delay:200ms}
+.hero-anim.d2{animation-delay:600ms}
+.hero-anim.d3{animation-delay:1100ms}
+.hero-anim.d4{animation-delay:1500ms}
+@keyframes heroFade{to{opacity:1;transform:translateY(0)}}
+
+/* === SECTION BASE === */
+section{position:relative}
+.section-pad{padding:160px 5vw}
+.section-pad-lg{padding:200px 5vw}
+.container{max-width:1400px;margin:0 auto}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:60px;margin-bottom:80px;flex-wrap:wrap}
+.section-head__num{font-family:var(--font-mono);color:var(--gold);font-size:13px;letter-spacing:0.18em;margin-bottom:24px;display:block}
+
+/* === REVEAL === */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* === PRODUCT WORLDS === */
+.worlds{padding:140px 0 160px}
+.worlds__head{padding:0 5vw;margin-bottom:80px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:40px}
+.worlds__head h2{max-width:900px}
+.worlds__row{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:0 2px}
+.world{position:relative;height:640px;overflow:hidden;cursor:pointer;background:var(--charcoal)}
+.world__img{position:absolute;inset:0;transition:transform 1.4s cubic-bezier(.22,1,.36,1), filter .6s ease}
+.world__img img{width:100%;height:100%;object-fit:cover;filter:brightness(0.7) saturate(1.05)}
+.world::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.5) 0%,transparent 30%,transparent 60%,rgba(0,0,0,0.85) 100%);z-index:1;transition:opacity .6s ease}
+.world__num{position:absolute;top:32px;left:32px;font-family:var(--font-mono);color:var(--gold);font-size:11px;letter-spacing:0.18em;z-index:2}
+.world__content{position:absolute;left:32px;right:32px;bottom:32px;z-index:2}
+.world__title{font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:48px;line-height:0.95;color:var(--white);margin-bottom:16px}
+.world__desc{font-size:13px;line-height:1.65;color:var(--white-soft);max-width:300px;margin-bottom:28px;opacity:0.85}
+.world__link{display:inline-flex;align-items:center;gap:10px;color:var(--gold);font-size:11px;letter-spacing:0.24em;text-transform:uppercase;font-weight:500;position:relative;padding-bottom:4px}
+.world__link::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--gold);transition:width .4s cubic-bezier(.22,1,.36,1)}
+.world:hover .world__img{transform:scale(1.04)}
+.world:hover .world__img img{filter:brightness(0.85) saturate(1.15)}
+.world:hover .world__link::after{width:100%}
+
+/* === VIZE === */
+.vize{background:var(--black);padding:160px 5vw}
+.vize__grid{display:grid;grid-template-columns:1fr 1.05fr;gap:80px;align-items:stretch;max-width:1400px;margin:0 auto}
+.vize__img{position:relative;min-height:720px;background:radial-gradient(circle at 50% 40%,#1a1a1a,var(--black-deep) 70%);overflow:hidden;display:flex;align-items:center;justify-content:center;padding:64px;border:1px solid rgba(212,175,55,0.15)}
+.vize__img::before{content:"";position:absolute;inset:24px;border:1px solid rgba(212,175,55,0.18);pointer-events:none}
+.vize__img::after{content:"";position:absolute;top:50%;left:50%;width:560px;height:560px;background:radial-gradient(circle,rgba(212,175,55,0.10),transparent 65%);transform:translate(-50%,-50%);pointer-events:none}
+.vize__lockup{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:56px;width:100%;max-width:520px}
+.vize__lockup-row{display:flex;align-items:center;justify-content:center;gap:48px;width:100%}
+.vize__lockup-logo{display:flex;flex-direction:column;align-items:center;gap:18px;flex:1}
+.vize__lockup-logo img{max-width:180px;height:auto;display:block}
+.vize__lockup-logo--lima img{max-width:140px}
+.vize__lockup-logo--pm img{max-width:200px;filter:invert(1) brightness(1.1)}
+.vize__lockup-caption{font-family:var(--font-mono);font-size:10px;letter-spacing:0.32em;color:rgba(212,175,55,0.85);text-transform:uppercase;text-align:center}
+.vize__lockup-x{font-family:var(--font-display);font-weight:300;font-size:36px;color:var(--gold);line-height:1;flex-shrink:0;align-self:center;margin-top:-22px}
+.vize__lockup-tag{margin-top:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.4em;color:rgba(255,255,255,0.55);text-transform:uppercase;display:flex;align-items:center;gap:14px}
+.vize__lockup-tag::before,.vize__lockup-tag::after{content:"";display:block;width:36px;height:1px;background:rgba(212,175,55,0.4)}
+.vize__panel{background:var(--charcoal);padding:64px;border-top:1px solid var(--gold);position:relative;display:flex;flex-direction:column;justify-content:center}
+.vize__quote{font-family:var(--font-display);font-weight:900;text-transform:uppercase;font-size:clamp(32px,3.4vw,52px);line-height:1.0;letter-spacing:-0.01em;margin:32px 0 48px}
+.vize__quote::before{content:"";display:block;width:48px;height:1px;background:var(--gold);margin-bottom:24px}
+.vize__body p{margin-bottom:20px;color:var(--gray-300);font-size:15px;line-height:1.8}
+
+/* === MAGAZINE SPREAD === */
+.magazine{background:var(--black-deep);padding:200px 5vw}
+.mag__row{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1400px;margin:0 auto 200px}
+.mag__row:last-child{margin-bottom:0}
+.mag__row.reverse{direction:rtl}
+.mag__row.reverse > *{direction:ltr}
+.mag__portrait{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--charcoal-2)}
+.mag__portrait img{width:100%;height:100%;object-fit:cover;filter:brightness(0.85) saturate(1.05)}
+.mag__portrait--placeholder{background:repeating-linear-gradient(45deg,#1a1a1a,#1a1a1a 20px,#141414 20px,#141414 40px)}
+.mag__portrait--placeholder::after{content:"";position:absolute;inset:24px;border:1px dashed rgba(212,175,55,0.45);z-index:1;pointer-events:none}
+.mag__placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;z-index:2;color:rgba(255,255,255,0.85)}
+.mag__placeholder-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase}
+.mag__placeholder-text{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:clamp(22px,2.4vw,32px);line-height:1.15;color:rgba(255,255,255,0.78)}
+.mag__portrait::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(5,5,5,0.85));z-index:1}
+.mag__portrait-label{position:absolute;bottom:32px;left:32px;z-index:2;font-family:var(--font-display);font-weight:900;font-size:clamp(48px,7vw,96px);line-height:0.85;text-transform:uppercase;color:var(--white);letter-spacing:0.02em}
+.mag__content{padding:0 20px}
+.mag__num{font-family:var(--font-mono);color:var(--gold);font-size:13px;letter-spacing:0.18em;margin-bottom:24px;display:block}
+.mag__hairline{width:48px;height:1px;background:var(--gold);margin-bottom:32px}
+.mag__title{margin-bottom:40px}
+.mag__body p{margin-bottom:18px;line-height:1.8;color:var(--gray-300);max-width:480px;font-size:15px}
+
+/* === PHILIP MARTIN'S A SVĚT === */
+.brand-story{padding:200px 5vw;background:var(--black);text-align:center}
+.brand-story__head{margin-bottom:72px}
+.brand-story__head h2{margin-top:24px}
+.video-frame{
+  max-width:1280px;margin:0 auto 72px;position:relative;aspect-ratio:16/9;
+  border:1px solid rgba(212,175,55,0.18);overflow:hidden;cursor:pointer;background:var(--charcoal);
+  transition:box-shadow .5s ease;
+}
+.video-frame:hover{box-shadow:0 24px 80px rgba(212,175,55,0.18)}
+.video-frame img{width:100%;height:100%;object-fit:cover;filter:brightness(0.65);transition:filter .5s ease}
+.video-frame:hover img{filter:brightness(0.85)}
+.video-frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%, rgba(10,10,10,0.5) 100%);pointer-events:none}
+.play-btn{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:88px;height:88px;border-radius:50%;background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .3s ease;z-index:2;
+}
+.play-btn::before{
+  content:"";position:absolute;inset:-8px;border-radius:50%;border:1px solid var(--gold);opacity:0.4;
+  animation:pulse 2.4s ease-out infinite;
+}
+@keyframes pulse{0%{transform:scale(1);opacity:0.4}100%{transform:scale(1.5);opacity:0}}
+.play-btn svg{margin-left:4px}
+.video-frame:hover .play-btn{transform:translate(-50%,-50%) scale(1.08)}
+.video-caption{font-family:var(--font-display);font-weight:800;font-size:18px;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;text-align:center;margin-top:32px}
+.brand-story__body{max-width:720px;margin:0 auto}
+.brand-story__body p{margin-bottom:20px;color:var(--gray-300);font-size:16px;line-height:1.8}
+.brand-story__link{margin-top:48px;display:inline-block}
+
+/* === MADE IN ITALY === */
+.italy{position:relative;padding:200px 5vw;text-align:center;overflow:hidden;background:var(--black-deep)}
+.italy__bg{position:absolute;inset:0}
+.italy__bg img{width:100%;height:100%;object-fit:cover;filter:brightness(0.4) saturate(0.85)}
+.italy__bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,5,0.7),rgba(5,5,5,0.4),rgba(5,5,5,0.85))}
+.italy__content{position:relative;max-width:900px;margin:0 auto}
+.italy h2{font-size:clamp(72px,11vw,180px);font-weight:900;margin:32px 0 48px}
+.italy__body{max-width:720px;margin:0 auto;color:var(--gray-300);font-size:18px;line-height:1.75}
+
+/* === 5 ELEMENTŮ === */
+.elementy{padding:160px 5vw;background:var(--black)}
+.elementy__head{margin-bottom:120px;text-align:center}
+.elementy__head h2{margin-top:24px}
+.element{display:grid;grid-template-columns:1fr 1.5fr;gap:80px;align-items:center;padding:64px 0;border-bottom:1px solid rgba(212,175,55,0.25)}
+.element:last-child{border-bottom:none}
+.element__num{font-family:var(--font-display);font-weight:900;font-size:clamp(120px,16vw,240px);line-height:0.85;letter-spacing:-0.02em;
+  background:var(--shimmer);background-size:200% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shimmer 4s ease-in-out infinite;
+}
+.element__name{font-family:var(--font-display);font-weight:800;font-size:48px;text-transform:uppercase;color:var(--white);margin-bottom:24px;letter-spacing:0.02em}
+.element__desc{color:var(--gray-300);font-size:16px;line-height:1.8;max-width:560px}
+
+/* === MANIFESTO === */
+.manifesto{padding:200px 5vw;background:var(--charcoal-2);text-align:center}
+.manifesto__inner{max-width:900px;margin:0 auto}
+.manifesto h2{margin-bottom:64px;font-size:clamp(48px,6vw,92px)}
+.manifesto__body{max-width:760px;margin:0 auto;color:var(--white-soft);font-size:18px;line-height:1.75}
+.manifesto__body p{margin-bottom:24px}
+
+/* === PARTNER CTA === */
+.partner-cta{position:relative;padding:200px 5vw;overflow:hidden}
+.partner-cta__bg{position:absolute;inset:0}
+.partner-cta__bg img{width:100%;height:100%;object-fit:cover;filter:brightness(0.4) saturate(1.1)}
+.partner-cta__bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,10,0.85) 0%,rgba(10,10,10,0.55) 100%)}
+.partner-cta__inner{position:relative;max-width:1400px;margin:0 auto}
+.partner-cta__content{max-width:700px}
+.partner-cta h2{margin:24px 0 32px}
+.partner-cta__sub{font-size:18px;color:var(--white-soft);line-height:1.65;margin-bottom:48px;max-width:520px}
+
+/* === LOGOS STRIP === */
+.logos{padding:140px 5vw;background:var(--black);text-align:center}
+.logos__head{margin-bottom:72px}
+.logos__head h3{font-size:32px;font-weight:700;margin-top:16px}
+.logos__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:48px;max-width:1200px;margin:0 auto 64px}
+.logo-item{
+  height:100px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);font-family:var(--font-display);font-weight:800;
+  text-transform:uppercase;color:var(--gray-300);font-size:14px;letter-spacing:0.18em;
+  transition:all .4s ease;cursor:pointer;opacity:0.6;
+}
+.logo-item:hover{opacity:1;color:var(--gold);border-color:var(--gold)}
+
+/* === FOOTER === */
+footer{background:var(--black-deep);padding:120px 5vw 48px;border-top:1px solid var(--line)}
+.footer__top{display:flex;flex-direction:column;align-items:center;gap:32px;margin-bottom:80px}
+.footer__mark{height:240px;width:auto;display:block;filter:drop-shadow(0 12px 48px rgba(212,175,55,0.2))}
+.footer__wordmark{font-family:var(--font-display);font-weight:900;font-size:clamp(48px,9vw,140px);text-transform:uppercase;color:var(--white);letter-spacing:0.02em;cursor:pointer;transition:all .6s ease}
+.footer__wordmark:hover{background:var(--shimmer);background-size:200% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 3s ease-in-out infinite}
+.footer__cols{display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr;gap:60px;max-width:1400px;margin:0 auto 80px;padding:60px 0;border-top:1px solid rgba(212,175,55,0.2);border-bottom:1px solid rgba(212,175,55,0.2)}
+.footer__col h4{font-family:var(--font-body);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:0.24em;color:var(--gold);margin-bottom:24px}
+.footer__col ul{list-style:none}
+.footer__col li{margin-bottom:14px;font-size:13px;color:var(--gray-300)}
+.footer__col a{transition:color .3s ease}
+.footer__col a:hover{color:var(--gold)}
+.founder{margin-bottom:24px}
+.founder__name{font-family:var(--font-display);font-weight:800;font-size:18px;color:var(--white);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.founder__contact{font-size:13px;color:var(--gray-300);line-height:1.6}
+.footer__legal{max-width:1400px;margin:0 auto;font-family:var(--font-body);font-weight:300;font-size:11px;color:var(--gray-500);letter-spacing:0.04em;line-height:1.8;text-align:center}
+
+/* === MODAL === */
+.modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center}
+.modal.open{display:flex}
+.modal__backdrop{position:absolute;inset:0;background:rgba(5,5,5,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);opacity:0;animation:bdIn .3s ease forwards}
+@keyframes bdIn{to{opacity:1}}
+.modal__content{position:relative;width:90vw;max-width:1280px;aspect-ratio:16/9;border:1px solid var(--gold);background:var(--black);transform:scale(0.96);opacity:0;animation:modIn .4s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes modIn{to{transform:scale(1);opacity:1}}
+.modal__content iframe{width:100%;height:100%;border:none}
+.modal__close{position:absolute;top:-64px;right:0;width:48px;height:48px;border-radius:50%;border:1px solid var(--gold);background:transparent;color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease}
+.modal__close:hover{background:var(--gold);color:var(--black)}
+
+/* ============== PARTNER PAGE ============== */
+.p-hero{position:relative;height:80vh;min-height:640px;display:flex;align-items:center;overflow:hidden}
+.p-hero__bg{position:absolute;inset:0}
+.p-hero__bg img{width:100%;height:100%;object-fit:cover;filter:brightness(0.45) saturate(1.05)}
+.p-hero__bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,0.4) 0%,rgba(10,10,10,0.85) 100%)}
+.p-hero__content{position:relative;padding:0 8vw;max-width:1200px}
+.p-hero h1{font-size:clamp(48px,8vw,140px);margin:32px 0}
+.p-hero__sub{max-width:560px;font-size:18px;line-height:1.65;color:var(--white-soft);margin-bottom:48px}
+
+.benefits{padding:160px 5vw;background:var(--black)}
+.benefits__head{text-align:center;margin-bottom:96px}
+.benefits__head h2{margin-top:24px}
+.benefits__grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;max-width:1200px;margin:0 auto}
+.benefit{background:var(--charcoal-2);padding:64px 48px;border-top:2px solid var(--gold);position:relative;transition:all .4s ease}
+.benefit__num{font-family:var(--font-mono);color:var(--gold);font-size:13px;letter-spacing:0.18em;margin-bottom:24px;display:block}
+.benefit__title{font-family:var(--font-display);font-weight:800;font-size:32px;text-transform:uppercase;color:var(--white);margin-bottom:20px;line-height:1.05}
+.benefit__desc{color:var(--gray-300);font-size:15px;line-height:1.75}
+.benefit:hover{background:var(--charcoal)}
+
+.timeline{padding:160px 5vw;background:var(--charcoal)}
+.timeline__head{text-align:center;margin-bottom:120px}
+.timeline__steps{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;max-width:1300px;margin:0 auto;position:relative}
+.timeline__line{position:absolute;top:48px;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--gold) 10%,var(--gold) 90%,transparent);opacity:0.4}
+.step{position:relative;text-align:center}
+.step__icon{width:96px;height:96px;border:1px solid var(--gold);border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;margin:0 auto 32px;color:var(--gold);position:relative;z-index:1}
+.step__num{font-family:var(--font-display);font-weight:900;font-size:64px;color:var(--gold);line-height:1;
+  background:var(--shimmer);background-size:200% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 4s ease-in-out infinite;
+  margin-bottom:16px;
+}
+.step__label{font-family:var(--font-display);font-weight:800;font-size:18px;text-transform:uppercase;letter-spacing:0.08em;color:var(--white);margin-bottom:12px}
+.step__desc{font-size:13px;color:var(--gray-300);line-height:1.65;max-width:240px;margin:0 auto}
+
+.support{padding:160px 5vw;background:var(--black)}
+.support__grid{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;max-width:1400px;margin:0 auto;align-items:center}
+.support__list{list-style:none}
+.support__list li{padding:24px 0;border-bottom:1px solid rgba(212,175,55,0.15);display:flex;align-items:flex-start;gap:24px}
+.support__list li::before{content:"";width:8px;height:8px;background:var(--gold);margin-top:10px;flex-shrink:0;transform:rotate(45deg)}
+.support__list strong{font-family:var(--font-display);font-weight:800;font-size:22px;text-transform:uppercase;color:var(--white);letter-spacing:0.05em;display:block;margin-bottom:6px}
+.support__list span{font-size:14px;color:var(--gray-300);line-height:1.6}
+
+/* === TESTIMONIALS === */
+.testimonials{padding:160px 5vw;background:var(--black-deep)}
+.testimonials__head{text-align:center;margin-bottom:140px}
+.testimonial{max-width:880px;margin:0 auto 160px;text-align:center}
+.testimonial:last-child{margin-bottom:0}
+.testimonial__quote{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,4.4vw,56px);line-height:1.15;color:var(--white);margin-bottom:48px;font-style:italic;letter-spacing:-0.01em}
+.testimonial__quote::before{content:"";display:block;width:32px;height:1px;background:var(--gold);margin:0 auto 32px}
+.testimonial__author{display:flex;align-items:center;justify-content:center;gap:18px}
+.testimonial__avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--charcoal),var(--charcoal-2));border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;color:var(--gold);font-family:var(--font-display);font-weight:800;font-size:14px;text-transform:uppercase}
+.testimonial__name{font-weight:600;font-size:14px;color:var(--white);letter-spacing:0.06em}
+.testimonial__meta{font-size:12px;color:var(--gray-300);letter-spacing:0.04em}
+
+/* === LEAD FORM === */
+.lead-form{padding:160px 5vw;background:var(--black)}
+.lead-form__inner{max-width:880px;margin:0 auto;background:var(--charcoal-2);padding:80px;border:1px solid var(--glass-border);position:relative}
+.lead-form__inner::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold)}
+.lead-form__head{text-align:center;margin-bottom:64px}
+.lead-form__head h3{font-size:48px;font-weight:800;margin-top:16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.form-grid .full{grid-column:span 2}
+.field{display:flex;flex-direction:column;gap:10px}
+.field label{font-family:var(--font-body);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:0.24em;color:var(--gold)}
+.field input,.field textarea,.field select{
+  background:transparent;border:none;border-bottom:1px solid var(--line);
+  padding:14px 0;color:var(--white);font-family:var(--font-body);font-size:15px;
+  transition:border-color .3s ease;outline:none;
+}
+.field select{cursor:pointer;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 15px) 22px,calc(100% - 10px) 22px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.field select option{background:var(--charcoal-2);color:var(--white)}
+.field textarea{resize:vertical;min-height:80px}
+.field input:focus,.field textarea:focus,.field select:focus{border-bottom-color:var(--gold)}
+.form-submit{width:100%;margin-top:48px;justify-content:center;padding:22px 32px}
+.form-note{font-family:var(--font-body);font-weight:300;font-style:italic;font-size:13px;color:var(--gray-300);text-align:center;margin-top:24px}
+.form-success{text-align:center;padding:64px 0}
+.form-success__icon{width:88px;height:88px;border-radius:50%;background:var(--gold);margin:0 auto 32px;display:flex;align-items:center;justify-content:center;color:var(--black)}
+.form-success h3{font-size:64px;font-weight:900;margin-bottom:16px}
+
+/* === FAQ === */
+.faq{padding:160px 5vw;background:var(--charcoal)}
+.faq__head{text-align:center;margin-bottom:80px}
+.faq__list{max-width:880px;margin:0 auto}
+.faq-item{border-bottom:1px solid rgba(212,175,55,0.18);padding:32px 0;cursor:pointer}
+.faq-item__q{display:flex;justify-content:space-between;align-items:center;gap:24px}
+.faq-item__q h4{font-family:var(--font-display);font-weight:700;font-size:24px;text-transform:uppercase;color:var(--white);letter-spacing:0.02em}
+.faq-item__icon{width:32px;height:32px;flex-shrink:0;color:var(--gold);font-size:24px;display:flex;align-items:center;justify-content:center;transition:transform .3s ease;font-weight:300}
+.faq-item.open .faq-item__icon{transform:rotate(45deg)}
+.faq-item__a{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.22,1,.36,1);color:var(--gray-300);font-size:15px;line-height:1.75}
+.faq-item.open .faq-item__a{max-height:300px;padding-top:24px}
+
+/* === MAP === */
+.map-section{padding:160px 5vw;background:var(--black)}
+.map-head{text-align:center;margin-bottom:64px}
+.map-filters{display:flex;justify-content:center;gap:16px;margin-bottom:48px;flex-wrap:wrap}
+.filter-chip{padding:12px 24px;border:1px solid var(--gold);color:var(--gold);background:var(--charcoal);font-family:var(--font-body);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:0.18em;cursor:pointer;transition:all .3s ease}
+.filter-chip:hover,.filter-chip.active{background:var(--gold);color:var(--black)}
+.map-wrap{display:grid;grid-template-columns:1.6fr 1fr;gap:2px;max-width:1400px;margin:0 auto;min-height:680px;background:var(--charcoal-2)}
+.map-canvas{position:relative;background:var(--charcoal-2);overflow:hidden}
+.map-canvas svg{width:100%;height:100%;display:block}
+.map-pin{cursor:pointer}
+.map-pin circle{transition:all .3s ease}
+.map-pin:hover circle.pin-dot{r:7;fill:var(--gold-light)}
+.map-pin .pin-pulse{animation:pinPulse 2.4s ease-out infinite;transform-origin:center}
+@keyframes pinPulse{0%{r:5;opacity:0.6}100%{r:18;opacity:0}}
+.map-pin.active circle.pin-dot{r:8;fill:var(--gold-light);stroke:var(--white)}
+.salon-panel{background:var(--black-deep);padding:48px;border-left:1px solid var(--glass-border);overflow-y:auto;max-height:680px}
+.salon-panel h4{font-family:var(--font-display);font-weight:800;font-size:32px;text-transform:uppercase;color:var(--white);margin-bottom:8px;line-height:1.05}
+.salon-panel__city{font-family:var(--font-mono);color:var(--gold);font-size:12px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:32px;display:block}
+.salon-panel__row{padding:16px 0;border-bottom:1px solid var(--line);font-size:13px;color:var(--gray-300)}
+.salon-panel__row strong{color:var(--white);display:block;margin-bottom:4px;font-weight:500;letter-spacing:0.04em}
+.salon-panel__cta{margin-top:32px;display:block}
+
+/* === RESPONSIVE === */
+@media (max-width:1024px){
+  .nav__links{display:none}
+  .nav__hamburger{display:flex}
+  .worlds__row{grid-template-columns:repeat(2,1fr)}
+  .vize__grid,.mag__row,.support__grid,.benefits__grid,.timeline__steps,.map-wrap{grid-template-columns:1fr}
+  .timeline__line{display:none}
+  .vize__img{min-height:520px}
+  .mag__row.reverse{direction:ltr}
+  .element{grid-template-columns:1fr;gap:24px;text-align:center}
+  .form-grid{grid-template-columns:1fr}
+  .form-grid .full{grid-column:span 1}
+  .footer__cols{grid-template-columns:1fr 1fr;gap:40px}
+  .lead-form__inner{padding:48px 32px}
+  .salon-panel{max-height:none}
+}
+@media (max-width:640px){
+  .hero{margin-top:140px;height:calc(100vh - 140px);min-height:520px}
+  .worlds__row{grid-template-columns:1fr}
+  .footer__cols{grid-template-columns:1fr}
+  .logos__grid{grid-template-columns:repeat(2,1fr);gap:24px}
+  .nav{padding:18px 5vw}
+  .section-pad,.section-pad-lg{padding:100px 5vw}
+}
+
+/* curtain */
+.curtain{position:fixed;inset:0;z-index:200;background:var(--black-deep);display:flex;align-items:center;justify-content:center;animation:curtainOut .35s 1.4s ease forwards}
+.curtain__mark{font-family:var(--font-display);font-weight:900;font-size:clamp(40px,8vw,96px);text-transform:uppercase;color:var(--white);letter-spacing:0.06em;opacity:0;animation:curtainIn .8s .2s ease forwards}
+.curtain__logo{height:clamp(220px,32vw,360px);width:auto;opacity:0;transform:scale(0.92);animation:curtainLogoIn 1s .15s cubic-bezier(.22,1,.36,1) forwards;filter:drop-shadow(0 12px 40px rgba(212,175,55,0.25))}
+@keyframes curtainLogoIn{to{opacity:1;transform:scale(1)}}
+@keyframes curtainIn{to{opacity:1}}
+@keyframes curtainOut{to{transform:translateY(-100%);opacity:0;visibility:hidden}}
+</style>
+</head>
+<body>
+
+<!-- Curtain reveal -->
+<div class="curtain" id="curtain">
+  <img src="images/PM-IMG-LIMA-LOGO.png" alt="LiMa Vision" class="curtain__logo" />
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a class="nav__logo" data-route="home" href="#home" aria-label="LiMa Vision"><img src="images/PM-IMG-LIMA-LOGO.png" alt="LiMa Vision" class="nav__logo-mark" /></a>
+  <div class="nav__links">
+    <a class="nav__link" data-route="o-nas" href="#o-nas" data-cz="O nás" data-en="About">O nás</a>
+    <a class="nav__link" href="https://www.philip-martins.store/" target="_blank" rel="noopener" data-cz="Philip Martin&#8216;s" data-en="Philip Martin&#8216;s">Philip Martin&#8217;s <span class="nav__ext">↗</span></a>
+    <a class="nav__link" data-route="partneri" href="#partneri" data-cz="Partneři" data-en="Partners">Partneři</a>
+    <a class="nav__link" data-route="salony" href="#salony" data-cz="Salony" data-en="Salons">Salony</a>
+    <a class="nav__link" data-route="blog" href="#blog" data-cz="Blog" data-en="Blog">Blog</a>
+    <a class="nav__link" data-route="kontakt" href="#kontakt" data-cz="Kontakt" data-en="Contact">Kontakt</a>
+  </div>
+  <div class="nav__right">
+    <div class="lang">
+      <button data-lang="cz" class="active">CZ</button>
+      <span>/</span>
+      <button data-lang="en">EN</button>
+    </div>
+    <a class="nav__shop" href="https://www.philip-martins.store/" target="_blank" rel="noopener" data-cz="E-shop" data-en="Shop">E-shop <span class="arrow">↗</span></a>
+    <a class="nav__cta" href="#partneri" data-route="partneri" data-cz="Domluvit konzultaci" data-en="Book consultation">Domluvit konzultaci</a>
+    <div class="nav__hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- ============ HOME PAGE ============ -->
+<main class="page active" data-page="home">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__bg">
+    <img src="images/PM-IMG-OIL-HANDS.png" alt="Philip Martin's hero" />
+  </div>
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <div class="hero__eyebrow eyebrow hero-anim d1" data-cz="Philip Martin&#8216;s — distributor pro Českou republiku" data-en="Philip Martin&#8216;s — distributor for Czech Republic">Philip Martin's — distributor pro Českou republiku</div>
+    <h1 class="hero-anim d2" data-cz-html="Italský luxus<br/>pro vaše <span class=&#8216;shimmer-text&#8216;>podnikání</span>" data-en-html="Italian luxury<br/>for your <span class=&#8216;shimmer-text&#8216;>business</span>">
+      Italský luxus<br/>pro vaše <span class="shimmer-text">podnikání</span>
+    </h1>
+    <p class="hero__sub hero-anim d3" data-cz="Bioorganická kosmetika z Itálie. Pro salony, kosmetiky a wellness rezorty, které chtějí víc než jen produkty." data-en="Bioorganic cosmetics from Italy. For salons, beauty studios and wellness resorts that want more than just products.">Bioorganická kosmetika z Itálie. Pro salony, kosmetiky a wellness rezorty, které chtějí víc než jen produkty.</p>
+    <div class="hero__ctas hero-anim d4">
+      <a href="#partneri" data-route="partneri" class="btn btn--filled" data-cz-html="Domluvit konzultaci <span class=&#8216;arrow&#8216;>→</span>" data-en-html="Book consultation <span class=&#8216;arrow&#8216;>→</span>">
+        Domluvit konzultaci <span class="arrow">→</span>
+      </a>
+      <a href="#philip-martins" data-route="philip-martins" class="link-gold" data-cz-html="Prozkoumat značku <span class=&#8216;arrow&#8216;>→</span>" data-en-html="Explore the brand <span class=&#8216;arrow&#8216;>→</span>">
+        Prozkoumat značku <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+  <div class="scroll-ind">
+    <div class="scroll-ind__line"></div>
+    <span class="scroll-ind__label">SCROLL</span>
+  </div>
+</section>
+
+<!-- 4 PRODUCT WORLDS -->
+<section class="worlds">
+  <div class="worlds__head">
+    <div class="reveal">
+      <span class="eyebrow-num">01 — KOLEKCE</span>
+      <h2 style="margin-top:24px" data-cz="Čtyři světy" data-en="Four worlds">Čtyři světy</h2>
+    </div>
+    <p class="reveal" style="max-width:420px;color:var(--gray-300);font-size:15px" data-cz="Každá řada je samostatná kapitola — vlasy, pleť, pánská péče a wellness rituály pro hotely a rezorty." data-en="Each line is its own chapter — hair, skin, men&#8216;s care and wellness rituals for hotels and resorts.">Každá řada je samostatná kapitola — vlasy, pleť, pánská péče a wellness rituály pro hotely a rezorty.</p>
+  </div>
+  <div class="worlds__row">
+    <div class="world reveal">
+      <div class="world__img"><img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80" alt="Vlasy — kadeřnický salon" /></div>
+      <span class="world__num">— 01</span>
+      <div class="world__content">
+        <div class="world__title" data-cz="Vlasy" data-en="Hair">Vlasy</div>
+        <p class="world__desc" data-cz="Péče, ale také půvab. Všechna tvorba a výsledky stylingu jsou vytvořené z biologicky kompatibilních přísad." data-en="Care, but also charm. All styling creations and results are made from biologically compatible ingredients.">Péče, ale také půvab. Všechna tvorba a výsledky stylingu jsou vytvořené z biologicky kompatibilních přísad.</p>
+        <a class="world__link" href="#" data-cz-html="Prozkoumat <span class=&#8216;arrow&#8216;>→</span>" data-en-html="Explore <span class=&#8216;arrow&#8216;>→</span>">Prozkoumat <span class="arrow">→</span></a>
+      </div>
+    </div>
+    <div class="world reveal">
+      <div class="world__img"><img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1200&q=80" alt="Pleť — péče o pleť" /></div>
+      <span class="world__num">— 02</span>
+      <div class="world__content">
+        <div class="world__title" data-cz="Pleť" data-en="Skin">Pleť</div>
+        <p class="world__desc" data-cz="Od prvního ranního gesta po poslední pohlazení večera, na smyslové cestě, která zachovává a respektuje pokožku." data-en="From the first morning gesture to the last evening caress, on a sensory journey that preserves and respects the skin.">Od prvního ranního gesta po poslední pohlazení večera, na smyslové cestě, která zachovává a respektuje pokožku.</p>
+        <a class="world__link" href="#" data-cz-html="Prozkoumat <span class=&#8216;arrow&#8216;>→</span>" data-en-html="Explore <span class=&#8216;arrow&#8216;>→</span>">Prozkoumat <span class="arrow">→</span></a>
+      </div>
+    </div>
+    <div class="world reveal">
+      <div class="world__img"><img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=80" alt="Muži — pánská péče" /></div>
+      <span class="world__num">— 03</span>
+      <div class="world__content">
+        <div class="world__title" data-cz="Muži" data-en="Men">Muži</div>
+        <p class="world__desc" data-cz="Odlišnosti, specifika. Ale také společné vlastnosti s ostatními našimi produkty: luxus, pohodlí, špičková péče a respekt k udržitelnému rozvoji planety." data-en="Differences, specifics. But also shared qualities with our other products: luxury, comfort, premier care and respect for sustainability.">Odlišnosti, specifika. Ale také společné vlastnosti s ostatními našimi produkty: luxus, pohodlí, špičková péče a respekt k udržitelnému rozvoji planety.</p>
+        <a class="world__link" href="#" data-cz-html="Prozkoumat <span class=&#8216;arrow&#8216;>→</span>" data-en-html="Explore <span class=&#8216;arrow&#8216;>→</span>">Prozkoumat <span class="arrow">→</span></a>
+      </div>
+    </div>
+    <div class="world reveal">
+      <div class="world__img"><img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80" alt="Wellness — spa rituál" /></div>
+      <span class="world__num">— 04</span>
+      <div class="world__content">
+        <div class="world__title" data-cz="Wellness" data-en="Wellness">Wellness</div>
+        <p class="world__desc" data-cz="Dopřejte si dávku emocionální pohody v butikových hotelech a wellness rezortech. Vytvoření nezapomenutelného zážitku je největším závazkem naší společnosti." data-en="Indulge in emotional well-being in boutique hotels and wellness resorts. Creating an unforgettable experience is our greatest commitment.">Dopřejte si dávku emocionální pohody v butikových hotelech a wellness rezortech. Vytvoření nezapomenutelného zážitku je největším závazkem naší společnosti.</p>
+        <a class="world__link" href="#" data-cz-html="Prozkoumat <span class=&#8216;arrow&#8216;>→</span>" data-en-html="Explore <span class=&#8216;arrow&#8216;>→</span>">Prozkoumat <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIZE -->
+<section class="vize">
+  <div class="vize__grid">
+    <div class="vize__img reveal">
+      <div class="vize__lockup">
+        <div class="vize__lockup-row">
+          <div class="vize__lockup-logo vize__lockup-logo--lima">
+            <img src="images/PM-IMG-LIMA-LOGO.png" alt="LiMa Vision" />
+            <span class="vize__lockup-caption">LiMa Vision</span>
+          </div>
+          <div class="vize__lockup-x">×</div>
+          <div class="vize__lockup-logo vize__lockup-logo--pm">
+            <img src="images/philip-martins-logo.png" alt="Philip Martin&#8217;s — Made of Italy" />
+            <span class="vize__lockup-caption">Philip Martin&#8217;s</span>
+          </div>
+        </div>
+          <span class="vize__lockup-tag">Distributor pro Českou republiku</span>
+      </div>
+    </div>
+    <div class="vize__panel reveal">
+      <span class="eyebrow-num">02 — VIZE</span>
+      <div class="vize__quote shimmer-text" data-cz="&bdquo;Nechceme komunitu, která je zaměřená pouze na zisk."" data-en="&bdquo;We don&#8216;t want a community focused only on profit."">„Nechceme komunitu, která je zaměřená pouze na zisk."</div>
+      <div class="vize__body">
+        <p data-cz="Spojuje nás láska, touha tvořit a naše osobní filosofie. Věříme, že nejlepší produkty nevznikají z ekonomické rovnice — vznikají z péče, řemesla a respektu." data-en="We&#8216;re bound by love, the desire to create and our personal philosophy. We believe the best products don&#8216;t come from economic equations — they come from care, craft and respect.">Spojuje nás láska, touha tvořit a naše osobní filosofie. Věříme, že nejlepší produkty nevznikají z ekonomické rovnice — vznikají z péče, řemesla a respektu.</p>
+        <p data-cz="Hledáme partnery, kteří chápou, že luxus je dnes synonymem pro vědomí — vědomí původu, ingrediencí, dopadu. A kteří chtějí svým klientům nabídnout zážitek, ne jenom službu." data-en="We seek partners who understand that luxury today is synonymous with consciousness — consciousness of origin, ingredients, impact. And who want to offer their clients an experience, not just a service.">Hledáme partnery, kteří chápou, že luxus je dnes synonymem pro vědomí — vědomí původu, ingrediencí, dopadu. A kteří chtějí svým klientům nabídnout zážitek, ne jenom službu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAGAZINE SPREAD -->
+<section class="magazine">
+  <div class="mag__row">
+    <div class="mag__portrait mag__portrait--placeholder reveal">
+      <div class="mag__placeholder">
+        <span class="mag__placeholder-eyebrow">PHOTO</span>
+        <span class="mag__placeholder-text">zde bude<br/>fotka Lindy</span>
+      </div>
+      <div class="mag__portrait-label">Linda</div>
+    </div>
+    <div class="mag__content reveal">
+      <span class="mag__num">01 — MARTIN POHLEDEM LINDY</span>
+      <div class="mag__hairline"></div>
+      <h3 class="mag__title" data-cz="Muž, který slyší, co neříkám" data-en="A man who hears what I don&#8216;t say">Muž, který slyší, co neříkám</h3>
+      <div class="mag__body">
+        <p data-cz="Martin je pro mě klid v bouři. Není to ten, kdo bude křičet — je to ten, kdo si sedne, podívá se mi do očí a zeptá se: &bdquo;Co opravdu chceš?" A já vím, že na odpověď bude čekat, jakkoliv dlouho bude potřeba." data-en="Martin is calm in my storm. He&#8216;s not the one who shouts — he&#8216;s the one who sits down, looks me in the eye and asks: &#8216;What do you really want?&#8216; And I know he&#8216;ll wait for the answer, however long it takes.">Martin je pro mě klid v bouři. Není to ten, kdo bude křičet — je to ten, kdo si sedne, podívá se mi do očí a zeptá se: „Co opravdu chceš?" A já vím, že na odpověď bude čekat, jakkoliv dlouho bude potřeba.</p>
+        <p data-cz="V byznysu má instinkt, který nemá ekonomický základ — má lidský. Vidí lidi dřív, než se sami představí. A právě proto jsme zvolili Philip Martin&#8216;s — protože jsme cítili, že tahle značka ví, co dělá. Ne pro výnos. Pro lidi." data-en="In business he has an instinct that isn&#8216;t economic — it&#8216;s human. He sees people before they introduce themselves. That&#8216;s why we chose Philip Martin&#8216;s — because we felt the brand knew what it was doing. Not for revenue. For people.">V byznysu má instinkt, který nemá ekonomický základ — má lidský. Vidí lidi dřív, než se sami představí. A právě proto jsme zvolili Philip Martin's — protože jsme cítili, že tahle značka ví, co dělá. Ne pro výnos. Pro lidi.</p>
+      </div>
+    </div>
+  </div>
+  <div class="mag__row reverse">
+    <div class="mag__portrait mag__portrait--placeholder reveal">
+      <div class="mag__placeholder">
+        <span class="mag__placeholder-eyebrow">PHOTO</span>
+        <span class="mag__placeholder-text">zde bude<br/>fotka Martina</span>
+      </div>
+      <div class="mag__portrait-label">Martin</div>
+    </div>
+    <div class="mag__content reveal">
+      <span class="mag__num">02 — LINDA POHLEDEM MARTINA</span>
+      <div class="mag__hairline"></div>
+      <h3 class="mag__title" data-cz="Žena, která ze všeho udělá rituál" data-en="A woman who turns everything into a ritual">Žena, která ze všeho udělá rituál</h3>
+      <div class="mag__body">
+        <p data-cz="Linda má dar, který se nedá naučit — proměňuje obyčejné okamžiky v něco, co si pamatujete. Ráno, kávu, rozhovor s klientem. Vždycky je to o pětadvaceti detailech, které ostatní nevidí." data-en="Linda has a gift you can&#8216;t learn — she turns ordinary moments into something you remember. A morning, a coffee, a conversation with a client. It&#8216;s always about twenty-five details others don&#8216;t see.">Linda má dar, který se nedá naučit — proměňuje obyčejné okamžiky v něco, co si pamatujete. Ráno, kávu, rozhovor s klientem. Vždycky je to o pětadvaceti detailech, které ostatní nevidí.</p>
+        <p data-cz="Když jsme poprvé otevřeli krabici s Philip Martin&#8216;s, dotkla se každého produktu, jako by to byl šperk. A já tehdy věděl: tohle je pro ni. Pro nás. Tahle značka mluví její řečí — řečí pozornosti, péče a tichého luxusu." data-en="When we first opened a Philip Martin&#8216;s box, she touched every product as if it were a piece of jewelry. And I knew then: this is for her. For us. This brand speaks her language — the language of attention, care and quiet luxury.">Když jsme poprvé otevřeli krabici s Philip Martin's, dotkla se každého produktu, jako by to byl šperk. A já tehdy věděl: tohle je pro ni. Pro nás. Tahle značka mluví její řečí — řečí pozornosti, péče a tichého luxusu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRAND STORY VIDEO -->
+<section class="brand-story">
+  <div class="brand-story__head reveal">
+    <span class="eyebrow-num">04 — PŘÍBĚH ZNAČKY</span>
+    <h2 data-cz="Philip Martin&#8216;s a svět" data-en="Philip Martin&#8216;s and the world">Philip Martin's a svět</h2>
+  </div>
+  <button class="video-frame reveal" data-video-id="9lqbryKBMNA" aria-label="Přehrát video Philip Martin's">
+    <img src="https://img.youtube.com/vi/9lqbryKBMNA/maxresdefault.jpg" alt="Philip Martin's brand video poster" onerror="this.src='https://img.youtube.com/vi/9lqbryKBMNA/hqdefault.jpg'" />
+    <span class="play-btn">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="#0A0A0A"><path d="M8 5v14l11-7z"/></svg>
+    </span>
+  </button>
+  <div class="video-caption reveal" data-cz="Watch the story — 02:34" data-en="Watch the story — 02:34">Watch the story — 02:34</div>
+  <div class="brand-story__body reveal" style="margin-top:80px">
+    <p data-cz="Philip Martin&#8216;s je italská značka bioorganické kosmetiky, kterou založil Mauro Trimigliozzi a pojmenoval ji po svých synech — Filippovi a Martinovi. Z toho vyplývá vše: rodinný rozměr, osobní vklad, závazek vůči dalším generacím." data-en="Philip Martin&#8216;s is an Italian bioorganic cosmetics brand founded by Mauro Trimigliozzi and named after his sons — Filippo and Martin. From this stems everything: a family dimension, personal investment, commitment to future generations.">Philip Martin's je italská značka bioorganické kosmetiky, kterou založil Mauro Trimigliozzi a pojmenoval ji po svých synech — Filippovi a Martinovi. Z toho vyplývá vše: rodinný rozměr, osobní vklad, závazek vůči dalším generacím.</p>
+    <p data-cz="Každá receptura vzniká v italských laboratořích z certifikovaných bioorganických ingrediencí. Žádné parabeny, žádné silikony, žádné kompromisy. Jen čistá, smyslná, bezpodmínečně luxusní péče." data-en="Every formula is created in Italian laboratories from certified bioorganic ingredients. No parabens, no silicones, no compromises. Just pure, sensual, unconditionally luxurious care.">Každá receptura vzniká v italských laboratořích z certifikovaných bioorganických ingrediencí. Žádné parabeny, žádné silikony, žádné kompromisy. Jen čistá, smyslná, bezpodmínečně luxusní péče.</p>
+  </div>
+  <a href="#philip-martins" data-route="philip-martins" class="link-gold brand-story__link reveal" data-cz-html="Pokračovat v příběhu <span class=&#8216;arrow&#8216;>→</span>" data-en-html="Continue the story <span class=&#8216;arrow&#8216;>→</span>">Pokračovat v příběhu <span class="arrow">→</span></a>
+</section>
+
+<!-- MADE IN ITALY -->
+<section class="italy">
+  <div class="italy__bg"><img src="images/made-in-italy.jpg" alt="Philip Martin&#8217;s — Made of Italy" /></div>
+  <div class="italy__content reveal">
+    <span class="eyebrow">05 — ORIGIN</span>
+    <h2 data-cz-html="Made in <span class=&#8216;shimmer-text&#8216;>Italy</span>" data-en-html="Made in <span class=&#8216;shimmer-text&#8216;>Italy</span>">Made in <span class="shimmer-text">Italy</span></h2>
+    <p class="italy__body" data-cz="Itálie není jen místo na mapě. Je to způsob myšlení — přesvědčení, že krása stojí za pomalost, že detail rozhoduje, že tradice a inovace mohou kráčet ruku v ruce. Philip Martin&#8216;s vyrábí v Itálii, protože jinde to prostě nejde." data-en="Italy isn&#8216;t just a place on the map. It&#8216;s a way of thinking — the belief that beauty deserves slowness, that detail decides, that tradition and innovation can walk hand in hand. Philip Martin&#8216;s manufactures in Italy because nowhere else will do.">Itálie není jen místo na mapě. Je to způsob myšlení — přesvědčení, že krása stojí za pomalost, že detail rozhoduje, že tradice a inovace mohou kráčet ruku v ruce. Philip Martin's vyrábí v Itálii, protože jinde to prostě nejde.</p>
+  </div>
+</section>
+
+<!-- 5 ELEMENTŮ -->
+<section class="elementy">
+  <div class="elementy__head reveal">
+    <span class="eyebrow-num">06 — DNA</span>
+    <h2 data-cz="Pět elementů" data-en="Five elements">Pět elementů</h2>
+  </div>
+  <div class="container">
+    <div class="element reveal">
+      <div class="element__num">01</div>
+      <div>
+        <div class="element__name" data-cz="Bioorganický" data-en="Bioorganic">Bioorganický</div>
+        <p class="element__desc" data-cz="Více než 90 % ingrediencí pochází z certifikovaných bioorganických zdrojů. Žádné parabeny, sulfáty, syntetická barviva. Pokožka rozezná čistotu okamžitě — a tělo si ji pamatuje." data-en="More than 90% of ingredients come from certified bioorganic sources. No parabens, sulfates, synthetic dyes. Skin recognizes purity instantly — and the body remembers it.">Více než 90 % ingrediencí pochází z certifikovaných bioorganických zdrojů. Žádné parabeny, sulfáty, syntetická barviva. Pokožka rozezná čistotu okamžitě — a tělo si ji pamatuje.</p>
+      </div>
+    </div>
+    <div class="element reveal">
+      <div class="element__num">02</div>
+      <div>
+        <div class="element__name" data-cz="Zelený" data-en="Green">Zelený</div>
+        <p class="element__desc" data-cz="Recyklovatelné obaly, omezení plastů, kompenzace uhlíkové stopy. Udržitelnost není marketingový claim — je to provozní rozhodnutí, které se promítá do každé fáze výroby." data-en="Recyclable packaging, plastic reduction, carbon offsetting. Sustainability isn&#8216;t a marketing claim — it&#8216;s an operational decision reflected in every stage of production.">Recyklovatelné obaly, omezení plastů, kompenzace uhlíkové stopy. Udržitelnost není marketingový claim — je to provozní rozhodnutí, které se promítá do každé fáze výroby.</p>
+      </div>
+    </div>
+    <div class="element reveal">
+      <div class="element__num">03</div>
+      <div>
+        <div class="element__name" data-cz="Smyslný" data-en="Sensual">Smyslný</div>
+        <p class="element__desc" data-cz="Vůně, textury, rituály. Každý dotek je navržený, aby probudil smysly — od prvního stisku tuby po závěrečný pocit pokožky. Krása začíná tam, kde končí spěch." data-en="Scents, textures, rituals. Every touch is designed to awaken the senses — from the first squeeze of the tube to the final feeling on skin. Beauty begins where rush ends.">Vůně, textury, rituály. Každý dotek je navržený, aby probudil smysly — od prvního stisku tuby po závěrečný pocit pokožky. Krása začíná tam, kde končí spěch.</p>
+      </div>
+    </div>
+    <div class="element reveal">
+      <div class="element__num">04</div>
+      <div>
+        <div class="element__name" data-cz="Luxusní" data-en="Luxurious">Luxusní</div>
+        <p class="element__desc" data-cz="Luxus pro nás není dekorace, ale kvalita každého detailu — od výběru extraktu po váhu skleněného flakonu. Výsledek nepotřebuje křičet. Stačí, aby vás přesvědčil." data-en="Luxury isn&#8216;t decoration to us — it&#8216;s the quality of every detail, from extract selection to the weight of a glass flacon. The result doesn&#8216;t need to shout. It just needs to convince.">Luxus pro nás není dekorace, ale kvalita každého detailu — od výběru extraktu po váhu skleněného flakonu. Výsledek nepotřebuje křičet. Stačí, aby vás přesvědčil.</p>
+      </div>
+    </div>
+    <div class="element reveal">
+      <div class="element__num">05</div>
+      <div>
+        <div class="element__name" data-cz="Exkluzivní" data-en="Exclusive">Exkluzivní</div>
+        <p class="element__desc" data-cz="Distribuce není automat. Vybíráme partnery, kteří sdílí naše hodnoty — salony, kosmetiky a wellness centra, kde má každý klient jméno, ne jen rezervaci." data-en="Distribution isn&#8216;t a vending machine. We pick partners who share our values — salons, beauty studios and wellness centers where every client has a name, not just a reservation.">Distribuce není automat. Vybíráme partnery, kteří sdílí naše hodnoty — salony, kosmetiky a wellness centra, kde má každý klient jméno, ne jen rezervaci.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="manifesto__inner reveal">
+    <span class="eyebrow-num">07 — MANIFEST</span>
+    <h2 style="margin-top:24px" data-cz-html="Říkat <span class=&#8216;shimmer-text&#8216;>pravdu</span> posiluje značku" data-en-html="Telling the <span class=&#8216;shimmer-text&#8216;>truth</span> strengthens the brand">Říkat <span class="shimmer-text">pravdu</span> posiluje značku</h2>
+    <div class="manifesto__body">
+      <p data-cz="V dobách, kdy se značky předhánějí v tom, kdo má lepší příběh, jsme se rozhodli pro nudnější cestu — říkat věci tak, jak jsou. Bez hvězdiček, bez výjimek z výjimek." data-en="In times when brands compete over who has the better story, we chose the more boring path — saying things as they are. No asterisks, no exceptions to exceptions.">V dobách, kdy se značky předhánějí v tom, kdo má lepší příběh, jsme se rozhodli pro nudnější cestu — říkat věci tak, jak jsou. Bez hvězdiček, bez výjimek z výjimek.</p>
+      <p data-cz="Když produkt obsahuje 92 % bioorganických surovin, řekneme 92 — ne &bdquo;přírodní složení". Když školení trvá tři dny, neříkáme týden. Pravda je jediná měna, která neztrácí hodnotu — a v luxusu obzvlášť." data-en="When a product contains 92% bioorganic ingredients, we say 92 — not &#8216;natural formula&#8216;. When training takes three days, we don&#8216;t say a week. Truth is the only currency that doesn&#8216;t lose value — and in luxury especially.">Když produkt obsahuje 92 % bioorganických surovin, řekneme 92 — ne „přírodní složení". Když školení trvá tři dny, neříkáme týden. Pravda je jediná měna, která neztrácí hodnotu — a v luxusu obzvlášť.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNER CTA -->
+<section class="partner-cta">
+  <div class="partner-cta__bg"><img src="images/PM-IMG-SHELF.jpg" alt="Salon interior" /></div>
+  <div class="partner-cta__inner reveal">
+    <div class="partner-cta__content">
+      <span class="eyebrow" data-cz="Staňte se částí naší komunity" data-en="Become part of our community">Staňte se částí naší komunity</span>
+      <h2 data-cz="Připojte se k LiMa Vision" data-en="Join LiMa Vision">Připojte se k LiMa Vision</h2>
+      <p class="partner-cta__sub" data-cz="Hledáme salony a wellness centra, která sdílí naši vizi italského luxusu a osobního přístupu." data-en="We&#8216;re looking for salons and wellness centers that share our vision of Italian luxury and personal approach.">Hledáme salony a wellness centra, která sdílí naši vizi italského luxusu a osobního přístupu.</p>
+      <a href="#partneri" data-route="partneri" class="btn btn--filled" data-cz-html="Stát se partnerem <span class=&#8216;arrow&#8216;>→</span>" data-en-html="Become a partner <span class=&#8216;arrow&#8216;>→</span>">Stát se partnerem <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<section class="logos">
+  <div class="logos__head reveal">
+    <span class="eyebrow-num">08 — KOMUNITA</span>
+    <h3 data-cz="Vybraní partneři po Česku" data-en="Selected partners across Czechia">Vybraní partneři po Česku</h3>
+  </div>
+  <div class="logos__grid">
+    <div class="logo-item">Atelier Praha</div>
+    <div class="logo-item">Studio Brno</div>
+    <div class="logo-item">Maison Karlovy Vary</div>
+    <div class="logo-item">Spa Resort Lipno</div>
+    <div class="logo-item">Bellezza Olomouc</div>
+    <div class="logo-item">Hotel Augustine</div>
+    <div class="logo-item">Salon Vinohrady</div>
+    <div class="logo-item">Wellness Český Krumlov</div>
+  </div>
+  <a href="#salony" data-route="salony" class="link-gold reveal" data-cz-html="Zobrazit všechny partnery <span class=&#8216;arrow&#8216;>→</span>" data-en-html="View all partners <span class=&#8216;arrow&#8216;>→</span>">Zobrazit všechny partnery <span class="arrow">→</span></a>
+</section>
+
+</main>
+
+<!-- ============ PARTNER PAGE ============ -->
+<main class="page" data-page="partneri">
+<section class="p-hero">
+  <div class="p-hero__bg"><img src="images/PM-IMG-SHELF.jpg" alt="Partner program hero" /></div>
+  <div class="p-hero__content">
+    <span class="eyebrow hero-anim d1" data-cz="Partnerský program" data-en="Partner program">Partnerský program</span>
+    <h1 class="hero-anim d2" data-cz-html="Staňte se partnerem<br/><span class=&#8216;shimmer-text&#8216;>Philip Martin&#8216;s</span> v ČR" data-en-html="Become a <span class=&#8216;shimmer-text&#8216;>Philip Martin&#8216;s</span><br/>partner in Czechia">Staňte se partnerem<br/><span class="shimmer-text">Philip Martin's</span> v ČR</h1>
+    <p class="p-hero__sub hero-anim d3" data-cz="Otevíráme dveře vybraným salonům, kosmetickým studiím a wellness centrům, která chtějí svým klientům nabídnout to nejlepší z italské bioorganické kosmetiky." data-en="We open doors to selected salons, beauty studios and wellness centers who want to offer their clients the best of Italian bioorganic cosmetics.">Otevíráme dveře vybraným salonům, kosmetickým studiím a wellness centrům, která chtějí svým klientům nabídnout to nejlepší z italské bioorganické kosmetiky.</p>
+    <a href="#lead-form" class="btn btn--filled hero-anim d4" data-cz-html="Vyplnit poptávku <span class=&#8216;arrow&#8216;>↓</span>" data-en-html="Submit inquiry <span class=&#8216;arrow&#8216;>↓</span>">Vyplnit poptávku <span class="arrow">↓</span></a>
+  </div>
+</section>
+
+<section class="benefits">
+  <div class="benefits__head reveal">
+    <span class="eyebrow-num">01 — PROČ S NÁMI</span>
+    <h2 data-cz="Co od partnerství získáte" data-en="What you gain from partnership">Co od partnerství získáte</h2>
+  </div>
+  <div class="benefits__grid">
+    <div class="benefit reveal">
+      <span class="benefit__num">— 01</span>
+      <h3 class="benefit__title" data-cz="Exkluzivní italský brand" data-en="Exclusive Italian brand">Exkluzivní italský brand</h3>
+      <p class="benefit__desc" data-cz="Philip Martin&#8216;s není v každém obchodě. Distribuujeme pouze vybraným partnerům, čímž chráníme hodnotu značky pro vás i pro vaše klienty." data-en="Philip Martin&#8216;s isn&#8216;t in every shop. We distribute only to selected partners, protecting the brand&#8216;s value for you and your clients.">Philip Martin's není v každém obchodě. Distribuujeme pouze vybraným partnerům, čímž chráníme hodnotu značky pro vás i pro vaše klienty.</p>
+    </div>
+    <div class="benefit reveal">
+      <span class="benefit__num">— 02</span>
+      <h3 class="benefit__title" data-cz="Vzdělávání a školení" data-en="Education & training">Vzdělávání a školení</h3>
+      <p class="benefit__desc" data-cz="Pravidelná školení s italskými trenéry, technické workshopy a hloubkové znalosti produktů. Vaše tým se učí přímo u zdroje." data-en="Regular trainings with Italian trainers, technical workshops and deep product knowledge. Your team learns directly from the source.">Pravidelná školení s italskými trenéry, technické workshopy a hloubkové znalosti produktů. Vaše tým se učí přímo u zdroje.</p>
+    </div>
+    <div class="benefit reveal">
+      <span class="benefit__num">— 03</span>
+      <h3 class="benefit__title" data-cz="Marketingová podpora" data-en="Marketing support">Marketingová podpora</h3>
+      <p class="benefit__desc" data-cz="Brand assets, fotografie, in-store materiály, společné kampaně. Vystupujete pod hlavičkou italského luxusu — a my vás v tom podržíme." data-en="Brand assets, photography, in-store materials, joint campaigns. You operate under the banner of Italian luxury — and we have your back.">Brand assets, fotografie, in-store materiály, společné kampaně. Vystupujete pod hlavičkou italského luxusu — a my vás v tom podržíme.</p>
+    </div>
+    <div class="benefit reveal">
+      <span class="benefit__num">— 04</span>
+      <h3 class="benefit__title" data-cz="Osobní spolupráce" data-en="Personal partnership">Osobní spolupráce</h3>
+      <p class="benefit__desc" data-cz="Žádný call-centrum. Linda nebo Martin osobně. Setkáváme se, mluvíme, řešíme. To je rozdíl mezi distribucí a partnerstvím." data-en="No call centre. Linda or Martin in person. We meet, we talk, we solve. That&#8216;s the difference between distribution and partnership.">Žádný call-centrum. Linda nebo Martin osobně. Setkáváme se, mluvíme, řešíme. To je rozdíl mezi distribucí a partnerstvím.</p>
+    </div>
+  </div>
+</section>
+
+<section class="timeline">
+  <div class="timeline__head reveal">
+    <span class="eyebrow-num">02 — PROCES</span>
+    <h2 style="margin-top:24px" data-cz="Jak to funguje" data-en="How it works">Jak to funguje</h2>
+  </div>
+  <div class="timeline__steps">
+    <div class="timeline__line"></div>
+    <div class="step reveal">
+      <div class="step__icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="step__num">01</div>
+      <div class="step__label" data-cz="Poptávka" data-en="Inquiry">Poptávka</div>
+      <p class="step__desc" data-cz="Vyplníte krátký formulář — pár základních informací o vašem provozu." data-en="You fill a short form — a few basic facts about your business.">Vyplníte krátký formulář — pár základních informací o vašem provozu.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step__icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="step__num">02</div>
+      <div class="step__label" data-cz="Konzultace" data-en="Consultation">Konzultace</div>
+      <p class="step__desc" data-cz="Linda nebo Martin se vám ozvou do 48 hodin. Bez tlaku — jen rozhovor o vaší vizi." data-en="Linda or Martin will reach out within 48 hours. No pressure — just a conversation about your vision.">Linda nebo Martin se vám ozvou do 48 hodin. Bez tlaku — jen rozhovor o vaší vizi.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step__icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <div class="step__num">03</div>
+      <div class="step__label" data-cz="Prezentace" data-en="Presentation">Prezentace</div>
+      <p class="step__desc" data-cz="Osobní setkání u nás, u vás, nebo na neutrální půdě. Produkty, vzorky, otázky." data-en="In-person meeting at ours, yours or neutral ground. Products, samples, questions.">Osobní setkání u nás, u vás, nebo na neutrální půdě. Produkty, vzorky, otázky.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step__icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <div class="step__num">04</div>
+      <div class="step__label" data-cz="Spolupráce" data-en="Partnership">Spolupráce</div>
+      <p class="step__desc" data-cz="Smlouva, onboarding, první závoz. Od první objednávky jste partner — ne klient." data-en="Contract, onboarding, first delivery. From your first order you&#8216;re a partner — not a client.">Smlouva, onboarding, první závoz. Od první objednávky jste partner — ne klient.</p>
+    </div>
+  </div>
+</section>
+
+<section class="support">
+  <div class="support__grid">
+    <div class="reveal">
+      <span class="eyebrow-num">03 — PACKAGE</span>
+      <h2 style="margin-top:24px;font-size:clamp(40px,5vw,72px)" data-cz="Co od nás dostanete" data-en="What you receive">Co od nás dostanete</h2>
+    </div>
+    <ul class="support__list reveal">
+      <li><div><strong data-cz="Kompletní katalog" data-en="Full catalog">Kompletní katalog</strong><span data-cz="Přístup ke všem řadám Philip Martin&#8216;s — vlasy, pleť, muži, wellness." data-en="Access to all Philip Martin&#8216;s lines — hair, skin, men, wellness.">Přístup ke všem řadám Philip Martin's — vlasy, pleť, muži, wellness.</span></div></li>
+      <li><div><strong data-cz="Školení techniků" data-en="Technician training">Školení techniků</strong><span data-cz="Dvoudenní intenzivní workshop pro váš tým, certifikace pro každého stylistu." data-en="Two-day intensive workshop for your team, certification for every stylist.">Dvoudenní intenzivní workshop pro váš tým, certifikace pro každého stylistu.</span></div></li>
+      <li><div><strong data-cz="In-store displeje" data-en="In-store displays">In-store displeje</strong><span data-cz="Designové stojany, testery, edukativní materiály — vše v souladu s brand guidelines." data-en="Designed stands, testers, educational materials — all aligned with brand guidelines.">Designové stojany, testery, edukativní materiály — vše v souladu s brand guidelines.</span></div></li>
+      <li><div><strong data-cz="Foto a video assets" data-en="Photo & video assets">Foto a video assets</strong><span data-cz="Knihovna profesionálních materiálů pro váš web, sociální sítě, kampaně." data-en="A library of professional materials for your website, socials, campaigns.">Knihovna profesionálních materiálů pro váš web, sociální sítě, kampaně.</span></div></li>
+      <li><div><strong data-cz="Map listing & PR" data-en="Map listing & PR">Map listing & PR</strong><span data-cz="Pozice ve veřejné mapě partnerů a v naší komunikaci s klienty." data-en="A spot on our public partner map and in our client communications.">Pozice ve veřejné mapě partnerů a v naší komunikaci s klienty.</span></div></li>
+      <li><div><strong data-cz="Founders&#8216; line" data-en="Founders&#8216; line">Founders' line</strong><span data-cz="Přímé telefony na Lindu a Martina. Žádné ticket systémy, žádná čekací doba." data-en="Direct lines to Linda and Martin. No ticket systems, no waiting times.">Přímé telefony na Lindu a Martina. Žádné ticket systémy, žádná čekací doba.</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="testimonials__head reveal">
+    <span class="eyebrow-num">04 — REFERENCE</span>
+    <h2 style="margin-top:24px" data-cz="Slova partnerů" data-en="Words from partners">Slova partnerů</h2>
+  </div>
+  <div class="testimonial reveal">
+    <p class="testimonial__quote" data-cz="&bdquo;Když jsem se s Lindou poprvé sešla, neptala se mě, kolik prodám. Ptala se mě, jaké klientky chci mít. To rozhodlo." data-en="&bdquo;When I first met Linda, she didn&#8216;t ask how much I&#8216;d sell. She asked what kind of clients I wanted. That decided it.">„Když jsem se s Lindou poprvé sešla, neptala se mě, kolik prodám. Ptala se mě, jaké klientky chci mít. To rozhodlo."</p>
+    <div class="testimonial__author">
+      <div class="testimonial__avatar">EV</div>
+      <div style="text-align:left">
+        <div class="testimonial__name">Eva Vaňková</div>
+        <div class="testimonial__meta">Atelier Vaňková — Praha</div>
+      </div>
+    </div>
+  </div>
+  <div class="testimonial reveal">
+    <p class="testimonial__quote" data-cz="&bdquo;Naši klienti si Philip Martin&#8216;s nosí domů jako šperk. Obal sám o sobě je pro ně zážitek. To se v wellness rezortu počítá dvojnásob." data-en="&bdquo;Our clients carry Philip Martin&#8216;s home like a piece of jewelry. The packaging alone is an experience. In a wellness resort, that counts twice.">„Naši klienti si Philip Martin's nosí domů jako šperk. Obal sám o sobě je pro ně zážitek. To se v wellness rezortu počítá dvojnásob."</p>
+    <div class="testimonial__author">
+      <div class="testimonial__avatar">PK</div>
+      <div style="text-align:left">
+        <div class="testimonial__name">Petr Krejčí</div>
+        <div class="testimonial__meta">Spa Resort Lipno</div>
+      </div>
+    </div>
+  </div>
+  <div class="testimonial reveal">
+    <p class="testimonial__quote" data-cz="&bdquo;Tři roky a Martin nám ještě nenechal čekat na zprávu déle než dvě hodiny. To už není dodavatel — to je kolega." data-en="&bdquo;Three years and Martin has never let us wait more than two hours for a reply. That&#8216;s no longer a supplier — that&#8216;s a colleague.">„Tři roky a Martin nám ještě nenechal čekat na zprávu déle než dvě hodiny. To už není dodavatel — to je kolega."</p>
+    <div class="testimonial__author">
+      <div class="testimonial__avatar">JN</div>
+      <div style="text-align:left">
+        <div class="testimonial__name">Jana Nováková</div>
+        <div class="testimonial__meta">Bellezza Studio — Olomouc</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lead-form" id="lead-form">
+  <div class="lead-form__inner reveal" id="leadFormBox">
+    <div class="lead-form__head">
+      <span class="eyebrow-num">05 — POPTÁVKA</span>
+      <h3 data-cz="Domluvit konzultaci" data-en="Book consultation">Domluvit konzultaci</h3>
+    </div>
+    <form class="form-grid" id="leadForm" onsubmit="return submitLead(event)">
+      <div class="field">
+        <label data-cz="Jméno a příjmení *" data-en="Name & surname *">Jméno a příjmení *</label>
+        <input type="text" required>
+      </div>
+      <div class="field">
+        <label data-cz="Název salonu / wellness *" data-en="Salon / wellness name *">Název salonu / wellness *</label>
+        <input type="text" required>
+      </div>
+      <div class="field">
+        <label data-cz="Město *" data-en="City *">Město *</label>
+        <input type="text" required>
+      </div>
+      <div class="field">
+        <label data-cz="Telefon *" data-en="Phone *">Telefon *</label>
+        <input type="tel" required>
+      </div>
+      <div class="field full">
+        <label data-cz="E-mail *" data-en="Email *">E-mail *</label>
+        <input type="email" required>
+      </div>
+      <div class="field full">
+        <label data-cz="Typ provozu" data-en="Business type">Typ provozu</label>
+        <select>
+          <option data-cz="Kadeřnický salon" data-en="Hair salon">Kadeřnický salon</option>
+          <option data-cz="Kosmetický salon" data-en="Beauty salon">Kosmetický salon</option>
+          <option data-cz="Wellness centrum" data-en="Wellness center">Wellness centrum</option>
+          <option data-cz="Hotel" data-en="Hotel">Hotel</option>
+          <option data-cz="Spa rezort" data-en="Spa resort">Spa rezort</option>
+          <option data-cz="Jiné" data-en="Other">Jiné</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label data-cz="Krátká zpráva" data-en="Short message">Krátká zpráva</label>
+        <textarea rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn btn--filled form-submit full" data-cz-html="Odeslat poptávku <span class=&#8216;arrow&#8216;>→</span>" data-en-html="Submit inquiry <span class=&#8216;arrow&#8216;>→</span>">Odeslat poptávku <span class="arrow">→</span></button>
+      <p class="form-note full" data-cz="Linda nebo Martin se vám ozve do 48 hodin." data-en="Linda or Martin will get back to you within 48 hours.">Linda nebo Martin se vám ozve do 48 hodin.</p>
+    </form>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="faq__head reveal">
+    <span class="eyebrow-num">06 — FAQ</span>
+    <h2 style="margin-top:24px" data-cz="Časté otázky" data-en="Frequent questions">Časté otázky</h2>
+  </div>
+  <div class="faq__list">
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item__q"><h4 data-cz="Jaké jsou minimální objednávkové podmínky?" data-en="What are the minimum order terms?">Jaké jsou minimální objednávkové podmínky?</h4><div class="faq-item__icon">+</div></div>
+      <div class="faq-item__a" data-cz="První objednávka začíná od kompaktního startovacího setu, který společně sestavíme podle vašeho salonu. Žádná pevná čísla — vše šijeme na míru." data-en="The first order starts with a compact starter set that we put together for your salon. No fixed numbers — everything is tailored.">První objednávka začíná od kompaktního startovacího setu, který společně sestavíme podle vašeho salonu. Žádná pevná čísla — vše šijeme na míru.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item__q"><h4 data-cz="Je školení v ceně partnerství?" data-en="Is training included in the partnership?">Je školení v ceně partnerství?</h4><div class="faq-item__icon">+</div></div>
+      <div class="faq-item__a" data-cz="Ano. Úvodní dvoudenní školení a všechna pravidelná školení během roku jsou zahrnuta. Investujeme do partnerů, kteří investují do nás." data-en="Yes. The initial two-day training and all regular trainings during the year are included. We invest in partners who invest in us.">Ano. Úvodní dvoudenní školení a všechna pravidelná školení během roku jsou zahrnuta. Investujeme do partnerů, kteří investují do nás.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item__q"><h4 data-cz="Jak dlouho trvá onboarding?" data-en="How long does onboarding take?">Jak dlouho trvá onboarding?</h4><div class="faq-item__icon">+</div></div>
+      <div class="faq-item__a" data-cz="Od podepsání smlouvy po první závoz typicky 2–3 týdny. Hodně závisí na vaší připravenosti — některé salony stíhají dřív." data-en="From signing the contract to first delivery typically 2–3 weeks. Much depends on your readiness — some salons make it earlier.">Od podepsání smlouvy po první závoz typicky 2–3 týdny. Hodně závisí na vaší připravenosti — některé salony stíhají dřív.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item__q"><h4 data-cz="Mohu prodávat Philip Martin&#8216;s i online?" data-en="Can I sell Philip Martin&#8216;s online?">Mohu prodávat Philip Martin's i online?</h4><div class="faq-item__icon">+</div></div>
+      <div class="faq-item__a" data-cz="E-commerce je u nás řešen samostatně přes philip-martins.store. Naši partneři jsou kamenné salony — každý kanál má své pravidla, které transparentně popisujeme ve smlouvě." data-en="E-commerce is handled separately via philip-martins.store. Our partners are brick-and-mortar salons — each channel has its own rules, transparently described in the contract.">E-commerce je u nás řešen samostatně přes philip-martins.store. Naši partneři jsou kamenné salony — každý kanál má své pravidla, které transparentně popisujeme ve smlouvě.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item__q"><h4 data-cz="Co když už mám jinou italskou značku?" data-en="What if I already carry another Italian brand?">Co když už mám jinou italskou značku?</h4><div class="faq-item__icon">+</div></div>
+      <div class="faq-item__a" data-cz="Není to překážka. Mnoho našich partnerů kombinuje. Společně se podíváme na to, jak by Philip Martin&#8216;s zapadlo do vašeho portfolia." data-en="Not a problem. Many of our partners combine brands. We&#8216;ll look together at how Philip Martin&#8216;s would fit into your portfolio.">Není to překážka. Mnoho našich partnerů kombinuje. Společně se podíváme na to, jak by Philip Martin's zapadlo do vašeho portfolia.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item__q"><h4 data-cz="Kdo se mi ozve po vyplnění formuláře?" data-en="Who will contact me after I submit?">Kdo se mi ozve po vyplnění formuláře?</h4><div class="faq-item__icon">+</div></div>
+      <div class="faq-item__a" data-cz="Osobně Linda nebo Martin. Žádný obchodník, žádný asistent. Tu rozmluvu chceme vést s vámi sami." data-en="Linda or Martin in person. No sales rep, no assistant. We want to have that conversation with you ourselves.">Osobně Linda nebo Martin. Žádný obchodník, žádný asistent. Tu rozmluvu chceme vést s vámi sami.</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ SALONY (MAP) PAGE ============ -->
+<main class="page" data-page="salony">
+<section class="map-section" style="padding-top:200px">
+  <div class="map-head reveal">
+    <span class="eyebrow-num">— PARTNEŘI</span>
+    <h2 style="margin-top:24px" data-cz="Mapa salonů" data-en="Salon map">Mapa salonů</h2>
+    <p style="max-width:560px;margin:32px auto 0;color:var(--gray-300);font-size:16px;line-height:1.7" data-cz="Vybraní Philip Martin&#8216;s partneři po celé České republice. Klikněte na zlatou špendlík pro detail." data-en="Selected Philip Martin&#8216;s partners across Czechia. Click a gold pin for details.">Vybraní Philip Martin's partneři po celé České republice. Klikněte na zlatou špendlík pro detail.</p>
+  </div>
+  <div class="map-filters reveal">
+    <button class="filter-chip active" data-cz="Vše" data-en="All">Vše</button>
+    <button class="filter-chip" data-cz="Praha &amp; okolí" data-en="Prague &amp; around">Praha &amp; okolí</button>
+    <button class="filter-chip" data-cz="Morava" data-en="Moravia">Morava</button>
+    <button class="filter-chip" data-cz="Kadeřnictví" data-en="Hair">Kadeřnictví</button>
+    <button class="filter-chip" data-cz="Kosmetika" data-en="Beauty">Kosmetika</button>
+    <button class="filter-chip" data-cz="Wellness" data-en="Wellness">Wellness</button>
+  </div>
+  <div class="map-wrap reveal">
+    <div class="map-canvas">
+      <svg viewBox="0 0 800 540" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1F1F1F" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="800" height="540" fill="#141414"/>
+        <rect width="800" height="540" fill="url(#grid)"/>
+        <!-- Czech Republic stylized outline -->
+        <path d="M 80,260 C 100,200 160,160 240,150 C 320,140 380,130 460,140 C 540,150 620,170 680,200 C 720,220 730,260 720,300 C 710,340 680,360 640,380 C 580,400 520,400 460,395 C 400,400 340,420 280,400 C 220,380 160,360 120,330 C 90,310 70,290 80,260 Z"
+              fill="rgba(212,175,55,0.04)" stroke="rgba(212,175,55,0.35)" stroke-width="1.2"/>
+        <!-- Cities -->
+        <g class="map-pin" data-id="praha" onclick="selectSalon('praha', this)">
+          <circle class="pin-pulse" cx="320" cy="240" r="5" fill="#D4AF37"/>
+          <circle class="pin-dot" cx="320" cy="240" r="5" fill="#D4AF37" stroke="#0A0A0A" stroke-width="1.5"/>
+          <text x="335" y="235" fill="#E8E8E8" font-size="10" font-family="Montserrat" font-weight="500" letter-spacing="2">PRAHA</text>
+        </g>
+        <g class="map-pin" data-id="brno" onclick="selectSalon('brno', this)">
+          <circle class="pin-pulse" cx="490" cy="320" r="5" fill="#D4AF37"/>
+          <circle class="pin-dot" cx="490" cy="320" r="5" fill="#D4AF37" stroke="#0A0A0A" stroke-width="1.5"/>
+          <text x="505" y="316" fill="#E8E8E8" font-size="10" font-family="Montserrat" font-weight="500" letter-spacing="2">BRNO</text>
+        </g>
+        <g class="map-pin" data-id="kv" onclick="selectSalon('kv', this)">
+          <circle class="pin-pulse" cx="180" cy="240" r="5" fill="#D4AF37"/>
+          <circle class="pin-dot" cx="180" cy="240" r="5" fill="#D4AF37" stroke="#0A0A0A" stroke-width="1.5"/>
+          <text x="100" y="232" fill="#E8E8E8" font-size="10" font-family="Montserrat" font-weight="500" letter-spacing="2">K. VARY</text>
+        </g>
+        <g class="map-pin" data-id="olomouc" onclick="selectSalon('olomouc', this)">
+          <circle class="pin-pulse" cx="560" cy="270" r="5" fill="#D4AF37"/>
+          <circle class="pin-dot" cx="560" cy="270" r="5" fill="#D4AF37" stroke="#0A0A0A" stroke-width="1.5"/>
+          <text x="575" y="266" fill="#E8E8E8" font-size="10" font-family="Montserrat" font-weight="500" letter-spacing="2">OLOMOUC</text>
+        </g>
+        <g class="map-pin" data-id="ck" onclick="selectSalon('ck', this)">
+          <circle class="pin-pulse" cx="280" cy="380" r="5" fill="#D4AF37"/>
+          <circle class="pin-dot" cx="280" cy="380" r="5" fill="#D4AF37" stroke="#0A0A0A" stroke-width="1.5"/>
+          <text x="295" y="376" fill="#E8E8E8" font-size="10" font-family="Montserrat" font-weight="500" letter-spacing="2">Č. KRUMLOV</text>
+        </g>
+        <g class="map-pin" data-id="lipno" onclick="selectSalon('lipno', this)">
+          <circle class="pin-pulse" cx="240" cy="410" r="5" fill="#D4AF37"/>
+          <circle class="pin-dot" cx="240" cy="410" r="5" fill="#D4AF37" stroke="#0A0A0A" stroke-width="1.5"/>
+          <text x="125" y="406" fill="#E8E8E8" font-size="10" font-family="Montserrat" font-weight="500" letter-spacing="2">LIPNO</text>
+        </g>
+        <g class="map-pin" data-id="vinohrady" onclick="selectSalon('vinohrady', this)">
+          <circle class="pin-pulse" cx="345" cy="250" r="5" fill="#D4AF37"/>
+          <circle class="pin-dot" cx="345" cy="250" r="5" fill="#D4AF37" stroke="#0A0A0A" stroke-width="1.5"/>
+        </g>
+        <g class="map-pin" data-id="hk" onclick="selectSalon('hk', this)">
+          <circle class="pin-pulse" cx="430" cy="220" r="5" fill="#D4AF37"/>
+          <circle class="pin-dot" cx="430" cy="220" r="5" fill="#D4AF37" stroke="#0A0A0A" stroke-width="1.5"/>
+          <text x="445" y="216" fill="#E8E8E8" font-size="10" font-family="Montserrat" font-weight="500" letter-spacing="2">HRADEC</text>
+        </g>
+      </svg>
+    </div>
+    <div class="salon-panel" id="salonPanel">
+      <span class="salon-panel__city">PRAHA 1 — STARÉ MĚSTO</span>
+      <h4>Atelier Vaňková</h4>
+      <div class="salon-panel__row"><strong data-cz="Adresa" data-en="Address">Adresa</strong>Rybná 716/24, 110 00 Praha 1</div>
+      <div class="salon-panel__row"><strong data-cz="Specializace" data-en="Specialty">Specializace</strong>Kadeřnický salon — barvení, péče, styling</div>
+      <div class="salon-panel__row"><strong data-cz="Řady Philip Martin&#8216;s" data-en="Philip Martin&#8216;s lines">Řady Philip Martin's</strong>Vlasy + Pleť — kompletní katalog</div>
+      <div class="salon-panel__row"><strong data-cz="Kontakt" data-en="Contact">Kontakt</strong>+420 222 333 444 · atelier@vankova.cz</div>
+      <a href="#" class="btn btn--filled salon-panel__cta" data-cz-html="Ozvat se <span class=&#8216;arrow&#8216;>→</span>" data-en-html="Get in touch <span class=&#8216;arrow&#8216;>→</span>">Ozvat se <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- Generic placeholder pages -->
+<main class="page" data-page="o-nas"><section style="padding:200px 5vw;text-align:center"><span class="eyebrow-num">— O NÁS</span><h1 style="margin:32px 0" data-cz="Linda &amp; Martin" data-en="Linda &amp; Martin">Linda &amp; Martin</h1><p style="max-width:600px;margin:0 auto;color:var(--gray-300)" data-cz="Tato stránka je v přípravě. V plné verzi pokračuje příběh Lindy a Martina, jejich cesta k Philip Martin&#8216;s a hodnoty, na kterých LiMa Vision stojí." data-en="This page is in preparation. The full version continues the story of Linda and Martin, their path to Philip Martin&#8216;s and the values LiMa Vision stands on.">Tato stránka je v přípravě.</p></section></main>
+<main class="page" data-page="philip-martins"><section style="padding:200px 5vw;text-align:center"><span class="eyebrow-num">— BRAND</span><h1 style="margin:32px 0">Philip Martin's</h1><p style="max-width:600px;margin:0 auto;color:var(--gray-300)" data-cz="Detailní brand stránka — historie, ingredience, certifikace, řady." data-en="Detailed brand page — history, ingredients, certifications, lines.">Detailní brand stránka — historie, ingredience, certifikace, řady.</p></section></main>
+<main class="page" data-page="blog"><section style="padding:200px 5vw;text-align:center"><span class="eyebrow-num">— JOURNAL</span><h1 style="margin:32px 0">Blog</h1><p style="max-width:600px;margin:0 auto;color:var(--gray-300)" data-cz="Příběhy partnerů, novinky z Itálie, edukace." data-en="Partner stories, news from Italy, education.">Příběhy partnerů, novinky z Itálie, edukace.</p></section></main>
+<main class="page" data-page="kontakt"><section style="padding:200px 5vw;text-align:center"><span class="eyebrow-num">— KONTAKT</span><h1 style="margin:32px 0" data-cz="Ozvěte se" data-en="Reach out">Ozvěte se</h1><div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;max-width:760px;margin:48px auto 0">
+  <div style="border:1px solid var(--glass-border);padding:48px"><div style="font-family:var(--font-display);font-weight:800;font-size:24px;color:var(--white);text-transform:uppercase;letter-spacing:0.06em">Linda</div><div style="color:var(--gold);margin-top:16px">+420 774 917 020</div><div style="color:var(--gray-300);margin-top:6px">linda@limavision.cz</div></div>
+  <div style="border:1px solid var(--glass-border);padding:48px"><div style="font-family:var(--font-display);font-weight:800;font-size:24px;color:var(--white);text-transform:uppercase;letter-spacing:0.06em">Martin</div><div style="color:var(--gold);margin-top:16px">+420 777 183 161</div><div style="color:var(--gray-300);margin-top:6px">martin@limavision.cz</div></div>
+</div></section></main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer__top reveal"><img src="images/PM-IMG-LIMA-LOGO.png" alt="LiMa Vision" class="footer__mark" /></div>
+  <div class="footer__cols">
+    <div class="footer__col">
+      <h4 data-cz="Brand" data-en="Brand">Brand</h4>
+      <ul>
+        <li><a href="#philip-martins" data-route="philip-martins" data-cz="Philip Martin&#8216;s" data-en="Philip Martin&#8216;s">Philip Martin's</a></li>
+        <li><a href="#" data-cz="Vlasy" data-en="Hair">Vlasy</a></li>
+        <li><a href="#" data-cz="Pleť" data-en="Skin">Pleť</a></li>
+        <li><a href="#" data-cz="Muži" data-en="Men">Muži</a></li>
+        <li><a href="#" data-cz="Wellness" data-en="Wellness">Wellness</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <h4 data-cz="Partneři" data-en="Partners">Partneři</h4>
+      <ul>
+        <li><a href="#partneri" data-route="partneri" data-cz="Stát se partnerem" data-en="Become partner">Stát se partnerem</a></li>
+        <li><a href="#salony" data-route="salony" data-cz="Mapa salonů" data-en="Salon map">Mapa salonů</a></li>
+        <li><a href="#" data-cz="Školení" data-en="Trainings">Školení</a></li>
+        <li><a href="#blog" data-route="blog" data-cz="Blog" data-en="Blog">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <h4 data-cz="O nás" data-en="About">O nás</h4>
+      <ul>
+        <li><a href="#o-nas" data-route="o-nas" data-cz="Linda &amp; Martin" data-en="Linda &amp; Martin">Linda &amp; Martin</a></li>
+        <li><a href="#" data-cz="Vize" data-en="Vision">Vize</a></li>
+        <li><a href="#kontakt" data-route="kontakt" data-cz="Kontakt" data-en="Contact">Kontakt</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <h4 data-cz="Founders&#8216; Line" data-en="Founders&#8216; Line">Founders' Line</h4>
+      <div class="founder">
+        <div class="founder__name">Linda</div>
+        <div class="founder__contact">+420 774 917 020<br/>linda@limavision.cz</div>
+      </div>
+      <div class="founder">
+        <div class="founder__name">Martin</div>
+        <div class="founder__contact">+420 777 183 161<br/>martin@limavision.cz</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer__legal">LiMa vision s.r.o. — Rybná 716/24, Staré Město, 110 00 Praha 1 — IČ 10673199 — C 346350 vedená u Městského soudu v Praze</div>
+</footer>
+
+<!-- VIDEO MODAL -->
+<div class="modal" id="videoModal">
+  <div class="modal__backdrop" onclick="closeVideo()"></div>
+  <div class="modal__content">
+    <button class="modal__close" onclick="closeVideo()" aria-label="Zavřít">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <iframe id="videoFrame" src="" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div>
+
+<script>
+// ============ NAV SCROLL ============
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', ()=>{
+  if(window.scrollY > 80) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+});
+
+// ============ ROUTING ============
+const pages = document.querySelectorAll('.page');
+const navLinks = document.querySelectorAll('[data-route]');
+function go(route){
+  pages.forEach(p=>p.classList.toggle('active', p.dataset.page===route));
+  document.querySelectorAll('.nav__link').forEach(l=>l.classList.toggle('active', l.dataset.route===route));
+  window.scrollTo({top:0, behavior:'instant'});
+  // re-run reveal
+  setTimeout(()=>initReveal(), 50);
+}
+navLinks.forEach(a=>{
+  a.addEventListener('click', e=>{
+    const route = a.dataset.route;
+    if(!route) return;
+    // allow #lead-form anchor with route="partneri"? Check href
+    if(a.getAttribute('href')==='#lead-form'){
+      e.preventDefault();
+      go('partneri');
+      setTimeout(()=>{document.getElementById('lead-form')?.scrollIntoView({behavior:'smooth'})}, 250);
+      return;
+    }
+    e.preventDefault();
+    history.pushState(null, '', '#'+route);
+    go(route);
+  });
+});
+window.addEventListener('hashchange', ()=>{
+  const r = location.hash.replace('#','') || 'home';
+  if([...pages].some(p=>p.dataset.page===r)) go(r);
+});
+// initial route
+const initial = location.hash.replace('#','') || 'home';
+if([...pages].some(p=>p.dataset.page===initial)) go(initial);
+
+// ============ LANG ============
+let currentLang = 'cz';
+document.querySelectorAll('.lang button').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    currentLang = b.dataset.lang;
+    document.querySelectorAll('.lang button').forEach(x=>x.classList.toggle('active', x===b));
+    applyLang();
+  });
+});
+function applyLang(){
+  document.querySelectorAll('[data-cz]').forEach(el=>{
+    const v = el.getAttribute('data-'+currentLang);
+    if(v!==null) el.textContent = v;
+  });
+  document.querySelectorAll('[data-cz-html]').forEach(el=>{
+    const v = el.getAttribute('data-'+currentLang+'-html');
+    if(v!==null) el.innerHTML = v;
+  });
+}
+
+// ============ REVEAL ============
+let revealObs;
+function initReveal(){
+  if(revealObs) revealObs.disconnect();
+  revealObs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.15, rootMargin:'-5% 0px'});
+  document.querySelectorAll('.page.active .reveal').forEach(el=>{
+    el.classList.remove('in');
+    revealObs.observe(el);
+  });
+}
+initReveal();
+
+// ============ VIDEO MODAL ============
+document.querySelectorAll('.video-frame').forEach(f=>{
+  f.addEventListener('click', ()=>{
+    const id = f.dataset.videoId;
+    const m = document.getElementById('videoModal');
+    const ifr = document.getElementById('videoFrame');
+    ifr.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&color=white`;
+    m.classList.add('open');
+    document.body.style.overflow='hidden';
+  });
+});
+function closeVideo(){
+  const m = document.getElementById('videoModal');
+  m.classList.remove('open');
+  document.getElementById('videoFrame').src='';
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeVideo(); });
+
+// ============ FAQ ============
+function toggleFaq(el){
+  el.classList.toggle('open');
+  el.querySelector('.faq-item__icon').textContent = el.classList.contains('open') ? '−' : '+';
+}
+
+// ============ MAP / SALONS ============
+const salons = {
+  praha: {city:'PRAHA 1 — STARÉ MĚSTO', name:'Atelier Vaňková', addr:'Rybná 716/24, 110 00 Praha 1', spec:'Kadeřnický salon — barvení, péče, styling', lines:'Vlasy + Pleť — kompletní katalog', contact:'+420 222 333 444 · atelier@vankova.cz'},
+  brno: {city:'BRNO — ČERNÁ POLE', name:'Studio Brno', addr:'Lidická 18, 602 00 Brno', spec:'Kadeřnický + kosmetický salon', lines:'Vlasy + Pleť + Muži', contact:'+420 543 222 111 · studio@brno.cz'},
+  kv: {city:'KARLOVY VARY', name:'Maison Karlovy Vary', addr:'T. G. Masaryka 12, 360 01', spec:'Kosmetické studio — pleť, péče', lines:'Pleť + Wellness', contact:'+420 353 111 222 · info@maisonkv.cz'},
+  olomouc: {city:'OLOMOUC', name:'Bellezza Studio', addr:'Horní náměstí 6, 779 00', spec:'Kosmetika & masáže', lines:'Pleť + Wellness', contact:'+420 585 999 888 · bellezza@olomouc.cz'},
+  ck: {city:'ČESKÝ KRUMLOV', name:'Hotel Růže Spa', addr:'Horní 154, 381 01', spec:'Hotel spa & wellness', lines:'Wellness — kompletní řada', contact:'+420 380 772 100 · spa@ruze.cz'},
+  lipno: {city:'LIPNO NAD VLTAVOU', name:'Spa Resort Lipno', addr:'Lipno nad Vltavou 86', spec:'Wellness rezort', lines:'Wellness + Pleť', contact:'+420 380 736 119 · info@lipnospa.cz'},
+  vinohrady: {city:'PRAHA 2 — VINOHRADY', name:'Salon Vinohrady', addr:'Vinohradská 89, 120 00 Praha 2', spec:'Pánský barbershop & péče', lines:'Muži — kompletní řada', contact:'+420 224 555 666 · barber@vinohrady.cz'},
+  hk: {city:'HRADEC KRÁLOVÉ', name:'Hotel Augustine HK', addr:'Velké náměstí 32, 500 03', spec:'Boutique hotel spa', lines:'Wellness + Vlasy', contact:'+420 495 222 333 · spa@augustinehk.cz'}
+};
+function selectSalon(id, el){
+  document.querySelectorAll('.map-pin').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const s = salons[id]; if(!s) return;
+  const panel = document.getElementById('salonPanel');
+  panel.innerHTML = `
+    <span class="salon-panel__city">${s.city}</span>
+    <h4>${s.name}</h4>
+    <div class="salon-panel__row"><strong>Adresa</strong>${s.addr}</div>
+    <div class="salon-panel__row"><strong>Specializace</strong>${s.spec}</div>
+    <div class="salon-panel__row"><strong>Řady Philip Martin's</strong>${s.lines}</div>
+    <div class="salon-panel__row"><strong>Kontakt</strong>${s.contact}</div>
+    <a href="#" class="btn btn--filled salon-panel__cta">Ozvat se <span class="arrow">→</span></a>
+  `;
+}
+
+// ============ FORM ============
+function submitLead(e){
+  e.preventDefault();
+  const box = document.getElementById('leadFormBox');
+  box.innerHTML = `
+    <div class="form-success">
+      <div class="form-success__icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h3>Děkujeme.</h3>
+      <p style="color:var(--gray-300);font-size:16px;margin-top:16px">Linda nebo Martin se vám ozvou do 48 hodin.</p>
+    </div>
+  `;
+  return false;
+}
+
+// ============ FILTER CHIPS ============
+document.querySelectorAll('.filter-chip').forEach(c=>{
+  c.addEventListener('click', ()=>{
+    document.querySelectorAll('.filter-chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
